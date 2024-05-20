@@ -1,7 +1,7 @@
 import React from "react";
-import Lateral from "./components/Lateral";
-import Table from "./components/Table";
-import NavBar from "./components/NavBar";
+import Lateral from "../components/Lateral";
+import Table from "../components/Table";
+import NavBar from "../components/NavBar";
 
 function App() {
   return (

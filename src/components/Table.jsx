@@ -85,7 +85,7 @@ const Table = () => {
                 <tr>
                   <td>
                     <img
-                      class="rounded-circle me-2"
+                      className="rounded-circle me-2"
                       width="30"
                       height="30"
                       src="assets/img/avatars/avatar2.jpeg"
@@ -139,29 +139,29 @@ const Table = () => {
             </div>
             <div className="col-md-6">
               <nav className="d-lg-flex justify-content-lg-end dataTables_paginate paging_simple_numbers">
-                <ul class="pagination">
-                  <li class="page-item disabled">
-                    <a class="page-link" aria-label="Previous" href="#">
+                <ul className="pagination">
+                  <li className="page-item disabled">
+                    <a className="page-link" aria-label="Previous" href="#">
                       <span aria-hidden="true">«</span>
                     </a>
                   </li>
-                  <li class="page-item active">
-                    <a class="page-link" href="#">
+                  <li className="page-item active">
+                    <a className="page-link" href="#">
                       1
                     </a>
                   </li>
-                  <li class="page-item">
-                    <a class="page-link" href="#">
+                  <li className="page-item">
+                    <a className="page-link" href="#">
                       2
                     </a>
                   </li>
-                  <li class="page-item">
-                    <a class="page-link" href="#">
+                  <li className="page-item">
+                    <a className="page-link" href="#">
                       3
                     </a>
                   </li>
-                  <li class="page-item">
-                    <a class="page-link" aria-label="Next" href="#">
+                  <li className="page-item">
+                    <a className="page-link" aria-label="Next" href="#">
                       <span aria-hidden="true">»</span>
                     </a>
                   </li>

@@ -1,11 +1,9 @@
-import React from 'react';
+import React from "react";
 
 const NavBar = () => {
   return (
-    <nav className="navbar navbar-expand bg-white shadow mb-4 topbar static-top navbar-light">
-      <div className="container-fluid">
-        {/*Contenido del nav */}
-      </div>
+    <nav className="navbar shadow mb-4 topbar static-top bg-primary">
+      <div className="container-fluid"></div>
     </nav>
   );
 };
