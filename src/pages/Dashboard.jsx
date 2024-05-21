@@ -1,7 +1,7 @@
 import React from "react";
 import Lateral from "../components/Lateral";
-import Table from "../components/Table";
 import NavBar from "../components/NavBar";
+import Pagination from "../components/Pagination";
 
 function App() {
   return (
@@ -10,7 +10,7 @@ function App() {
         <Lateral />
         <div className="d-flex flex-column" id="content-wrapper">
           <NavBar />
-          <Table />
+          <Pagination/>
         </div>
       </div>
     </div>
