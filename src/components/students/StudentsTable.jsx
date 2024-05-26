@@ -32,11 +32,12 @@ const Table = () => {
     setIsLoading(false);
   };
 
-  const findByID = async (searchId) => {
+  const findByID = async (searchCode) => {
     setIsLoading(true);
     try {
       const response = await axios.get(
-        `https://back-simulacion-por-computador.vercel.app/students/buscarId/${searchId}`
+        `https://back-simulacion-por-computador.vercel.app/students/findCode`,
+        { params: { code: searchCode } }
       );
       setData(response.data.data);
     } catch (error) {

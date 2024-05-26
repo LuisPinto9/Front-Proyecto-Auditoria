@@ -7,11 +7,11 @@ const TableActionTools = ({
   fetchData,
   dataSize,
 }) => {
-  const [searchId, setSearchId] = useState("");
+  const [searchCode, setSearchCode] = useState("");
 
   useEffect(() => {
-    searchId ? null : dataSize !== 1 ? null : fetchData();
-  }, [searchId]);
+    searchCode ? null : dataSize !== 1 ? null : fetchData();
+  }, [searchCode]);
 
   return (
     <>
@@ -46,8 +46,8 @@ const TableActionTools = ({
             <button
               type="button"
               className="btn"
-              onClick={() => findById(searchId)}
-              disabled={!searchId}
+              onClick={() => findById(searchCode)}
+              disabled={!searchCode}
               style={{
                 padding: 0,
                 height: "2rem",
@@ -66,10 +66,10 @@ const TableActionTools = ({
                 className="form-control form-control-sm"
                 aria-controls="dataTable"
                 placeholder="Buscar por ID"
-                onKeyUp={(e) => (e.key === "Enter" ? findById(searchId) : null)}
-                value={searchId}
+                onKeyUp={(e) => (e.key === "Enter" ? findById(searchCode) : null)}
+                value={searchCode}
                 onChange={(e) => {
-                  setSearchId(e.target.value);
+                  setSearchCode(e.target.value);
                 }}
               />
             </label>
