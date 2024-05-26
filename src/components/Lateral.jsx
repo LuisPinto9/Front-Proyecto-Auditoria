@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 
 const Lateral = () => {
   return (
@@ -50,13 +51,14 @@ const Lateral = () => {
               data-bs-toggle="collapse"
               href="#collapse-2"
             >
-              <i className="far fa-file-alt"></i>&nbsp; Tipoic
+              <i className="far fa-file-alt"></i>&nbsp; Materias
             </button>
             <div className="collapse ms-4" id="collapse-2">
               <div>
                 <button className="my-custom-button text-white">
-                  {" "}
-                  <i className="far fa-user"> </i> Listar
+                  <Link to="/listTopic" className="text-white" style={{textDecoration: 'none'}}>
+                    <i className="pi pi-list"></i> Listar
+                  </Link>
                 </button>
               </div>
             </div>
