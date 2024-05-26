@@ -1,7 +1,7 @@
 import React, {useState, useEffect} from 'react'
 import Lateral from "../components/Lateral";
 import NavBar from "../components/NavBar";
-import Table from '../components/Table';
+import Table from '../components/students/Table';
 
 const ListStudents = () => {
   return (
