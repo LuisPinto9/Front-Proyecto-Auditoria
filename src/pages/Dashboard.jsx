@@ -10,7 +10,6 @@ function App() {
         <Lateral />
         <div className="d-flex flex-column" id="content-wrapper">
           <NavBar />
-          <Pagination/>
         </div>
       </div>
     </div>
