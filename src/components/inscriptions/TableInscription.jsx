@@ -1,6 +1,3 @@
-
-
-
 import React, { useEffect, useState } from 'react'
 import Lateral from "../Lateral";
 import NavBar from "../NavBar";

@@ -1,5 +1,3 @@
-
-
 import React, { useState, useEffect } from "react";
 import PropTypes from 'prop-types';
 import { DataTable } from "primereact/datatable";
@@ -10,7 +8,6 @@ import { Card } from "primereact/card";
 
 
 const PaginationInscription = ({ data }) => {
-  // const columas = data.length > 0 ? Object.keys(data[0]) : [];
 
   const [filteredData, setFilteredData] = useState(data);
   const [searchValue, setSearchValue] = useState("");
@@ -77,27 +74,23 @@ const PaginationInscription = ({ data }) => {
 
 const header = (
     <div className="table-header" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-      <h5 className="p-m-0">Barra de filtro</h5>
+      <h5 className="p-m-0">Barra de Busqueda
+      <p></p>
       <span className="p-input-icon-left">
-        <i className="pi pi-search" />
+        
         <InputText 
           type="search" 
           onInput={(e) => setSearchValue(e.target.value)} 
           placeholder="Buscar por ID o estado"
-          style={{ width: '600px', padding: '0.5rem', borderRadius: '0.5rem', border: '1px solid #ccc' }}
+          style={{ width: '500px', padding: '0.5rem', borderRadius: '0.5rem', border: '1px solid #ccc' }}
         />
+        <i className="pi pi-search" />
       </span>
+      </h5>
     </div>
   );
 
-  // const columns = [
-  
 
-  //   { field: "group", header: "Grupo", body: rowData => rowData.group ? rowData.group.name : '' },
-  //   { field: "registrationDate", header: "Fecha de Registro", body: rowData => new Date(rowData.registrationDate).toLocaleDateString() },
-  //   { field: "status", header: "Estado" },
-
-  // ];
   return (
     <Card title={header} style={{ margin: "15px" }}>
       <DataTable
