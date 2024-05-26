@@ -1,5 +1,8 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import axios from "axios";
+import InfoPagination from "./InfoStudentsPagination";
+import TableActionTools from "./TableActionTools";
+import { Toast } from "primereact/toast";
 
 const Table = () => {
   const [data, setData] = useState([]);
@@ -9,6 +12,7 @@ const Table = () => {
   const [sortDirection, setSortDirection] = useState("");
   const [totalRecords, setTotalRecords] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
+  const toast = useRef(null);
 
   useEffect(() => {
     fetchTotalCount();
@@ -24,6 +28,24 @@ const Table = () => {
       setTotalRecords(response.data.countStudents);
     } catch (error) {
       console.error("Error fetching total count:", error);
+    }
+    setIsLoading(false);
+  };
+
+  const findByID = async (searchId) => {
+    setIsLoading(true);
+    try {
+      const response = await axios.get(
+        `https://back-simulacion-por-computador.vercel.app/students/buscarId/${searchId}`
+      );
+      setData(response.data.data);
+    } catch (error) {
+      toast.current.show({
+        severity: "error",
+        summary: "Estudiante no encontrado",
+        detail: "El ID proporcionado no existe.",
+        life: 3000,
+      });
     }
     setIsLoading(false);
   };
@@ -65,27 +87,6 @@ const Table = () => {
     setSortDirection(newSortDirection);
   };
 
-  const totalPages = Math.ceil(totalRecords / pageSize);
-  const maxPagesToShow = 3;
-  let startPage = Math.max(1, pageNumber - Math.floor(maxPagesToShow / 2));
-  let endPage = Math.min(
-    totalPages,
-    pageNumber + Math.floor(maxPagesToShow / 2)
-  );
-
-  if (endPage - startPage < maxPagesToShow - 1) {
-    if (startPage === 1) {
-      endPage = Math.min(totalPages, startPage + maxPagesToShow - 1);
-    } else if (endPage === totalPages) {
-      startPage = Math.max(1, endPage - maxPagesToShow + 1);
-    }
-  }
-
-  const pages = [];
-  for (let i = startPage; i <= endPage; i++) {
-    pages.push(i);
-  }
-
   return (
     <div className="container-fluid">
       <div className="card shadow">
@@ -93,45 +94,14 @@ const Table = () => {
           <p className="text-primary m-0 fw-bold">Información de Estudiantes</p>
         </div>
         <div className="card-body">
-          <div className="row">
-            <div className="col-md-6 text-nowrap">
-              <div
-                id="dataTable_length"
-                className="dataTables_length"
-                aria-controls="dataTable"
-              >
-                <label className="form-label">
-                  Mostrar&nbsp;
-                  <select
-                    className="d-inline-block form-select form-select-sm"
-                    value={pageSize}
-                    onChange={handlePageSizeChange}
-                  >
-                    <option value="10">10</option>
-                    <option value="25">25</option>
-                    <option value="50">50</option>
-                    <option value="100">100</option>
-                  </select>
-                  &nbsp;
-                </label>
-              </div>
-            </div>
-            <div className="col-md-6">
-              <div
-                className="text-md-end dataTables_filter"
-                id="dataTable_filter"
-              >
-                <label className="form-label">
-                  <input
-                    type="search"
-                    className="form-control form-control-sm"
-                    aria-controls="dataTable"
-                    placeholder="Buscar"
-                  />
-                </label>
-              </div>
-            </div>
-          </div>
+          <Toast ref={toast} />
+          <TableActionTools
+            pageSize={pageSize}
+            handlePageSizeChange={handlePageSizeChange}
+            findById={findByID}
+            fetchData={fetchData}
+            dataSize={data.length}
+          />
           <div
             className="table-responsive table mt-2"
             id="dataTable"
@@ -156,25 +126,50 @@ const Table = () => {
               <table className="table my-0 text-center" id="dataTable">
                 <thead>
                   <tr>
-                    <th>#</th>
+                    <th>ID</th>
                     <th>Identificación</th>
                     <th onClick={() => handleSortChange("code")}>
                       <button className="btn btn-link p-0 m-0 d-flex align-items-center fw-bold text-decoration-none text-black">
                         Código
-                        <i className="pi pi-sort-alt px-1"></i>
+                        <i
+                          className={`pi pi-sort-${
+                            sortDirection === "Asc" && sortBy == "code"
+                              ? "alpha-down"
+                              : sortDirection === "Desc" && sortBy == "code"
+                              ? "alpha-down-alt"
+                              : "alt"
+                          } px-1`}
+                        ></i>
                       </button>
                     </th>
                     <th>Tipo de Documento</th>
                     <th onClick={() => handleSortChange("firstName")}>
                       <button className="btn btn-link p-0 m-0 d-flex align-items-center fw-bold text-decoration-none text-black">
                         Nombre
-                        <i className="pi pi-sort-alt px-1"></i>
+                        <i
+                          className={`pi pi-sort-${
+                            sortDirection === "Asc" && sortBy == "firstName"
+                              ? "alpha-down"
+                              : sortDirection === "Desc" &&
+                                sortBy == "firstName"
+                              ? "alpha-down-alt"
+                              : "alt"
+                          } px-1`}
+                        ></i>
                       </button>
                     </th>
                     <th onClick={() => handleSortChange("lastName")}>
                       <button className="btn btn-link p-0 m-0 d-flex align-items-center fw-bold text-decoration-none text-black">
                         Apellido
-                        <i className="pi pi-sort-alt px-1"></i>
+                        <i
+                          className={`pi pi-sort-${
+                            sortDirection === "Asc" && sortBy == "lastName"
+                              ? "alpha-down"
+                              : sortDirection === "Desc" && sortBy == "lastName"
+                              ? "alpha-down-alt"
+                              : "alt"
+                          } px-1`}
+                        ></i>
                       </button>
                     </th>
                     <th>Fecha de Nacimiento</th>
@@ -184,9 +179,9 @@ const Table = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {data.map((student, index) => (
+                  {data.map((student) => (
                     <tr key={student._id}>
-                      <td>{index + 1}</td>
+                      <td>{student.id}</td>
                       <td>{student.Identification}</td>
                       <td>{student.code}</td>
                       <td>{student.documentType}</td>
@@ -207,98 +202,12 @@ const Table = () => {
               </table>
             </div>
           </div>
-          <div className=" align-self-center">
-            <p
-              id="dataTable_info"
-              className="dataTables_info"
-              role="status"
-              aria-live="polite"
-            >
-              Mostrando{" "}
-              {Math.min((pageNumber - 1) * pageSize + 1, totalRecords)} -{" "}
-              {Math.min(pageNumber * pageSize, totalRecords)} de {totalRecords}{" "}
-              estudiantes
-            </p>
-          </div>
-          <div className="d-flex justify-content-center mb-0">
-            <div style={{ overflowX: "auto" }}>
-              <nav className="d-flex justify-content-center justify-content-md-end dataTables_paginate paging_simple_numbers">
-                <ul className="pagination">
-                  <li
-                    className={`page-item ${
-                      pageNumber === 1 ? "disabled" : ""
-                    }`}
-                  >
-                    <button
-                      className="page-link"
-                      aria-label="Previous"
-                      onClick={() => handlePageChange(pageNumber - 1)}
-                    >
-                      <span aria-hidden="true">«</span>
-                    </button>
-                  </li>
-                  {startPage > 1 && (
-                    <li className="page-item">
-                      <button
-                        className="page-link"
-                        onClick={() => handlePageChange(1)}
-                      >
-                        1
-                      </button>
-                    </li>
-                  )}
-                  {startPage > 2 && (
-                    <li className="page-item disabled">
-                      <span className="page-link">...</span>
-                    </li>
-                  )}
-                  {pages.map((page) => (
-                    <li
-                      key={page}
-                      className={`page-item ${
-                        pageNumber === page ? "active" : ""
-                      }`}
-                    >
-                      <button
-                        className="page-link"
-                        onClick={() => handlePageChange(page)}
-                      >
-                        {page}
-                      </button>
-                    </li>
-                  ))}
-                  {endPage < totalPages - 1 && (
-                    <li className="page-item disabled">
-                      <span className="page-link">...</span>
-                    </li>
-                  )}
-                  {endPage < totalPages && (
-                    <li className="page-item">
-                      <button
-                        className="page-link"
-                        onClick={() => handlePageChange(totalPages)}
-                      >
-                        {totalPages}
-                      </button>
-                    </li>
-                  )}
-                  <li
-                    className={`page-item ${
-                      pageNumber === totalPages ? "disabled" : ""
-                    }`}
-                  >
-                    <button
-                      className="page-link"
-                      aria-label="Next"
-                      onClick={() => handlePageChange(pageNumber + 1)}
-                    >
-                      <span aria-hidden="true">»</span>
-                    </button>
-                  </li>
-                </ul>
-              </nav>
-            </div>
-          </div>
+          <InfoPagination
+            totalRecords={totalRecords}
+            pageSize={pageSize}
+            pageNumber={pageNumber}
+            handlePageChange={handlePageChange}
+          />
         </div>
       </div>
     </div>
