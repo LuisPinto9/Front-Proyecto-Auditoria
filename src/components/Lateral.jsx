@@ -15,30 +15,25 @@ const Lateral = () => {
             <i className="fas fa-laugh-wink"></i>
           </div>
           <div className="sidebar-brand-text mx-3">
-            <span>University</span>
+            <Link
+              to="/"
+              className="text-white"
+              style={{ textDecoration: "none" }}
+            >
+              <span>University</span>
+            </Link>
           </div>
         </button>
 
         <div>
           {/* Inicio colapse */}
           <div className="margin-right-38">
-            <button
+            <Link
               className="my-custom-button btn btn-primary"
-              data-bs-toggle="collapse"
-              href="#collapse-1"
+              to="/listStudents"
             >
-              <i className="far fa-user"></i>&nbsp; Student
-            </button>
-            <div className="collapse ms-4" id="collapse-1">
-              <div>
-              <button className="my-custom-button text-white">
-                  <Link to="/estudiantes" className="text-white" style={{textDecoration: 'none'}}>
-                    <i className="pi pi-list"></i> Listar
-                  </Link>
-                </button>
-              </div>
-              
-            </div>
+              <i className="far fa-user"></i>&nbsp; Estudiantes
+            </Link>
           </div>
           {/* Inicio colapse */}
           <div className="margin-right-38">
@@ -52,7 +47,11 @@ const Lateral = () => {
             <div className="collapse ms-4" id="collapse-2">
               <div>
                 <button className="my-custom-button text-white">
-                  <Link to="/listTopic" className="text-white" style={{textDecoration: 'none'}}>
+                  <Link
+                    to="/listTopic"
+                    className="text-white"
+                    style={{ textDecoration: "none" }}
+                  >
                     <i className="pi pi-list"></i> Listar
                   </Link>
                 </button>

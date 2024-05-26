@@ -1,11 +1,91 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
+import axios from "axios";
 
 const Table = () => {
+  const [data, setData] = useState([]);
+  const [pageSize, setPageSize] = useState(10);
+  const [pageNumber, setPageNumber] = useState(1);
+  const [sortBy, setSortBy] = useState("");
+  const [sortDirection, setSortDirection] = useState("");
+  const [totalRecords, setTotalRecords] = useState(0);
+
+  useEffect(() => {
+    fetchTotalCount();
+    fetchData();
+  }, [pageSize, pageNumber, sortBy, sortDirection]);
+
+  const fetchTotalCount = async () => {
+    try {
+      const response = await axios.get(
+        "https://back-simulacion-por-computador.vercel.app/students/countStudents"
+      );
+      setTotalRecords(response.data.countStudents);
+    } catch (error) {
+      console.error("Error fetching total count:", error);
+    }
+  };
+
+  const fetchData = async () => {
+    try {
+      const response = await axios.get(
+        `https://back-simulacion-por-computador.vercel.app/students`,
+        {
+          params: {
+            PageSize: pageSize,
+            PageNumber: pageNumber,
+            SortBy: sortBy,
+            SortDirection: sortDirection,
+          },
+        }
+      );
+      setData(response.data.data);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
+
+  const handlePageSizeChange = (event) => {
+    setPageSize(Number(event.target.value));
+    setPageNumber(1);
+  };
+
+  const handlePageChange = (newPageNumber) => {
+    setPageNumber(newPageNumber);
+  };
+
+  const handleSortChange = (field) => {
+    const newSortDirection =
+      sortBy === field && sortDirection === "Asc" ? "Desc" : "Asc";
+    setSortBy(field);
+    setSortDirection(newSortDirection);
+  };
+
+  const totalPages = Math.ceil(totalRecords / pageSize);
+  const maxPagesToShow = 5;
+  let startPage = Math.max(1, pageNumber - Math.floor(maxPagesToShow / 2));
+  let endPage = Math.min(
+    totalPages,
+    pageNumber + Math.floor(maxPagesToShow / 2)
+  );
+
+  if (endPage - startPage < maxPagesToShow - 1) {
+    if (startPage === 1) {
+      endPage = Math.min(totalPages, startPage + maxPagesToShow - 1);
+    } else if (endPage === totalPages) {
+      startPage = Math.max(1, endPage - maxPagesToShow + 1);
+    }
+  }
+
+  const pages = [];
+  for (let i = startPage; i <= endPage; i++) {
+    pages.push(i);
+  }
+
   return (
     <div className="container-fluid">
       <div className="card shadow">
         <div className="card-header py-3">
-          <p className="text-primary m-0 fw-bold">Employee Info</p>
+          <p className="text-primary m-0 fw-bold">Información de Estudiantes</p>
         </div>
         <div className="card-body">
           <div className="row">
@@ -16,10 +96,11 @@ const Table = () => {
                 aria-controls="dataTable"
               >
                 <label className="form-label">
-                  Show&nbsp;
+                  Mostrar&nbsp;
                   <select
                     className="d-inline-block form-select form-select-sm"
-                    value="10"
+                    value={pageSize}
+                    onChange={handlePageSizeChange}
                   >
                     <option value="10">10</option>
                     <option value="25">25</option>
@@ -40,7 +121,7 @@ const Table = () => {
                     type="search"
                     className="form-control form-control-sm"
                     aria-controls="dataTable"
-                    placeholder="Search"
+                    placeholder="Buscar"
                   />
                 </label>
               </div>
@@ -55,75 +136,34 @@ const Table = () => {
             <table className="table my-0" id="dataTable">
               <thead>
                 <tr>
-                  <th>Name</th>
-                  <th>Position</th>
-                  <th>Office</th>
-                  <th>Age</th>
-                  <th>Start date</th>
-                  <th>Salary</th>
+                  <th>#</th>
+                  <th>Identificación</th>
+                  <th onClick={() => handleSortChange("code")}>Código</th>
+                  <th>Tipo de Documento</th>
+                  <th onClick={() => handleSortChange("firstName")}>Nombre</th>
+                  <th onClick={() => handleSortChange("lastName")}>Apellido</th>
+                  <th>Fecha de Nacimiento</th>
+                  <th>Teléfono</th>
+                  <th>Email</th>
+                  <th>State</th>
                 </tr>
               </thead>
               <tbody>
-                <tr>
-                  <td>
-                    <img
-                      className="rounded-circle me-2"
-                      width="30"
-                      height="30"
-                      src="assets/img/avatars/avatar1.jpeg"
-                      alt="avatar"
-                    />
-                    Airi Satou
-                  </td>
-                  <td>Accountant</td>
-                  <td>Tokyo</td>
-                  <td>33</td>
-                  <td>2008/11/28</td>
-                  <td>$162,700</td>
-                </tr>
-                {/* ... Resto de las filas de la tabla */}
-                <tr>
-                  <td>
-                    <img
-                      className="rounded-circle me-2"
-                      width="30"
-                      height="30"
-                      src="assets/img/avatars/avatar2.jpeg"
-                    />
-                    Angelica Ramos
-                  </td>
-                  <td>Chief Executive Officer(CEO)</td>
-                  <td>London</td>
-                  <td>47</td>
-                  <td>
-                    2009/10/09
-                    <br />
-                  </td>
-                  <td>$1,200,000</td>
-                </tr>
+                {data.map((student) => (
+                  <tr key={student._id}>
+                    <td>{student.id}</td>
+                    <td>{student.Identification}</td>
+                    <td>{student.code}</td>
+                    <td>{student.documentType}</td>
+                    <td>{student.firstName}</td>
+                    <td>{student.lastName}</td>
+                    <td>{student.birthdate}</td>
+                    <td>{student.cellphone}</td>
+                    <td>{student.email}</td>
+                    <td>{student.state}</td>
+                  </tr>
+                ))}
               </tbody>
-              <tfoot>
-                <tr>
-                  <td>
-                    <strong>Name</strong>
-                  </td>
-                  <td>
-                    <strong>Position</strong>
-                  </td>
-                  <td>
-                    <strong>Office</strong>
-                  </td>
-                  <td>
-                    <strong>Age</strong>
-                  </td>
-                  <td>
-                    <strong>Start date</strong>
-                  </td>
-                  <td>
-                    <strong>Salary</strong>
-                  </td>
-                </tr>
-              </tfoot>
             </table>
           </div>
           <div className="row">
@@ -134,39 +174,90 @@ const Table = () => {
                 role="status"
                 aria-live="polite"
               >
-                Showing 1 to 10 of 27
+                Mostrando{" "}
+                {Math.min((pageNumber - 1) * pageSize + 1, totalRecords)} -{" "}
+                {Math.min(pageNumber * pageSize, totalRecords)} de{" "}
+                {totalRecords} estudiantes
               </p>
             </div>
             <div className="col-md-6">
-              <nav className="d-lg-flex justify-content-lg-end dataTables_paginate paging_simple_numbers">
-                <ul className="pagination">
-                  <li className="page-item disabled">
-                    <a className="page-link" aria-label="Previous" href="#">
-                      <span aria-hidden="true">«</span>
-                    </a>
-                  </li>
-                  <li className="page-item active">
-                    <a className="page-link" href="#">
-                      1
-                    </a>
-                  </li>
-                  <li className="page-item">
-                    <a className="page-link" href="#">
-                      2
-                    </a>
-                  </li>
-                  <li className="page-item">
-                    <a className="page-link" href="#">
-                      3
-                    </a>
-                  </li>
-                  <li className="page-item">
-                    <a className="page-link" aria-label="Next" href="#">
-                      <span aria-hidden="true">»</span>
-                    </a>
-                  </li>
-                </ul>
-              </nav>
+              <div style={{ overflowX: "auto" }}>
+                <nav className="d-flex justify-content-center justify-content-md-end dataTables_paginate paging_simple_numbers">
+                  <ul className="pagination">
+                    <li
+                      className={`page-item ${
+                        pageNumber === 1 ? "disabled" : ""
+                      }`}
+                    >
+                      <button
+                        className="page-link"
+                        aria-label="Previous"
+                        onClick={() => handlePageChange(pageNumber - 1)}
+                      >
+                        <span aria-hidden="true">«</span>
+                      </button>
+                    </li>
+                    {startPage > 1 && (
+                      <li className="page-item">
+                        <button
+                          className="page-link"
+                          onClick={() => handlePageChange(1)}
+                        >
+                          1
+                        </button>
+                      </li>
+                    )}
+                    {startPage > 2 && (
+                      <li className="page-item disabled">
+                        <span className="page-link">...</span>
+                      </li>
+                    )}
+                    {pages.map((page) => (
+                      <li
+                        key={page}
+                        className={`page-item ${
+                          pageNumber === page ? "active" : ""
+                        }`}
+                      >
+                        <button
+                          className="page-link"
+                          onClick={() => handlePageChange(page)}
+                        >
+                          {page}
+                        </button>
+                      </li>
+                    ))}
+                    {endPage < totalPages - 1 && (
+                      <li className="page-item disabled">
+                        <span className="page-link">...</span>
+                      </li>
+                    )}
+                    {endPage < totalPages && (
+                      <li className="page-item">
+                        <button
+                          className="page-link"
+                          onClick={() => handlePageChange(totalPages)}
+                        >
+                          {totalPages}
+                        </button>
+                      </li>
+                    )}
+                    <li
+                      className={`page-item ${
+                        pageNumber === totalPages ? "disabled" : ""
+                      }`}
+                    >
+                      <button
+                        className="page-link"
+                        aria-label="Next"
+                        onClick={() => handlePageChange(pageNumber + 1)}
+                      >
+                        <span aria-hidden="true">»</span>
+                      </button>
+                    </li>
+                  </ul>
+                </nav>
+              </div>
             </div>
           </div>
         </div>
