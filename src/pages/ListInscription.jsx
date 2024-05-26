@@ -5,10 +5,7 @@ import TableInscription from '../components/inscriptions/TableInscription'
 const ListInscription = () => {
         
     return (
-        <>
-        
         <TableInscription/>
-        </>
       )
     }
 
