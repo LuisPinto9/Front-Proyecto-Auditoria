@@ -1,7 +1,7 @@
-import React, {useState, useEffect} from 'react'
+import React from 'react'
 import Lateral from "../components/Lateral";
 import NavBar from "../components/NavBar";
-import Table from '../components/students/Table';
+import Table from '../components/students/StudentsTable';
 
 const ListStudents = () => {
   return (
