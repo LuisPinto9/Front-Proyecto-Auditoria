@@ -2,15 +2,14 @@
 
 
 import React, { useEffect, useState } from 'react'
-// import TableStudent from '../components/students/TableStudent'
 import Lateral from "../Lateral";
 import NavBar from "../NavBar";
-import PaginationStudent from "./PaginationStudent";
+import PaginationInscription from "./PaginationInscription";
 
-const TableStudent = () => {
+const TableInscription = () => {
         const [data, setData] = useState([]);
         useEffect(() => {
-            fetch("https://back-simulacion-por-computador.vercel.app/students")
+            fetch("https://back-simulacion-por-computador.vercel.app/inscriptions")
               .then((res) => {
                 if (!res.ok) {
                   throw new Error('Network response was not ok');
@@ -32,12 +31,12 @@ const TableStudent = () => {
             <Lateral />
             <div className="d-flex flex-column" id="content-wrapper">
               <NavBar />
-              <PaginationStudent data={data}/>
+              <PaginationInscription data={data}/>
             </div>
           </div>
         </div>
       )
     }
 
-export default TableStudent
+export default TableInscription
 

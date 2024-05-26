@@ -76,6 +76,15 @@ const Lateral = () => {
               </div>
             </div>
           </div>
+          {/* Inicio colapse */}
+          <div className="margin-right-38">
+            <Link
+              className="my-custom-button btn btn-primary"
+              to="/listInscription"
+            >
+              <i className="far fa-user"></i>&nbsp; Inscripciones
+            </Link>
+          </div>
           {/* Fin colapse */}
         </div>
       </div>
