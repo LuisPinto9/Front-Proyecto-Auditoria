@@ -4,6 +4,7 @@ import Dashboard from "../pages/Dashboard";
 import ListTopic from "../pages/ListTopic";
 import ListInscription from "../pages/ListInscription";
 import ListStudents from "../pages/ListStudents";
+import ListGroups from "../pages/ListGroups";
 
 
 {/* <Route exact path="/estudiantes" Component={Student} /> */}
@@ -15,6 +16,7 @@ const Router = () => {
         <Route exact path="/listTopic" Component={ListTopic} />
         <Route exact path="/listStudents" Component={ListStudents} />
         <Route exact path="/listInscription" Component={ListInscription} />
+        <Route exact path="/listGroups" Component={ListGroups} />
       </Routes>
     </BrowserRouter>
   );

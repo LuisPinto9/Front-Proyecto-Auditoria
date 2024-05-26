@@ -65,13 +65,18 @@ const Lateral = () => {
               data-bs-toggle="collapse"
               href="#collapse-3"
             >
-              <i className="far fa-address-book"></i>&nbsp; Group
+              <i className="far fa-address-book"></i>&nbsp; Grupos
             </button>
             <div className="collapse ms-4" id="collapse-3">
               <div>
                 <button className="my-custom-button text-white">
-                  {" "}
-                  <i className="far fa-user"> </i> Listar
+                <Link
+                    to="/listGroups"
+                    className="text-white"
+                    style={{ textDecoration: "none" }}
+                  >
+                    <i className="pi pi-list"></i> Listar
+                  </Link>
                 </button>
               </div>
             </div>

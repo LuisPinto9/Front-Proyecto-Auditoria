@@ -1,7 +1,7 @@
 import React from "react";
 import Lateral from "../components/Lateral";
 import NavBar from "../components/NavBar";
-import Pagination from "../components/Pagination";
+import Pagination from "../components/groups/Pagination";
 
 function App() {
   return (

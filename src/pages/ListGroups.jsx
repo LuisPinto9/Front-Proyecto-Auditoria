@@ -1,12 +1,12 @@
-import React, {useEffect, useState} from 'react'
+import React, { useEffect, useState } from 'react'
 import Lateral from "../components/Lateral"
 import NavBar from "../components/NavBar";
-import PaginationTopics from '../components/Topics/PaginationTopics'
+import Pagination from '../components/groups/Pagination';
 
-const ListTopic = () => {
-  const [data,setData] = useState([]);
+const ListGroups = () => {
+    const [data,setData] = useState([]);
     useEffect(() => {
-        fetch("https://back-simulacion-por-computador.vercel.app/topics")
+        fetch("https://back-simulacion-por-computador.vercel.app/groups")
           .then((res) => {
             if (!res.ok) {
               throw new Error('Network response was not ok');
@@ -22,18 +22,17 @@ const ListTopic = () => {
             console.log('Fetch error:', error);
           });
       }, []);
-    
   return (
     <div id="page-top">
       <div id="wrapper">
         <Lateral />
         <div className="d-flex flex-column" id="content-wrapper">
           <NavBar />
-          {data.length > 0 && <PaginationTopics data={data} />}
+          {data.length > 0 && <Pagination data={data} />}
         </div>
       </div>
     </div>
   )
 }
 
-export default ListTopic
+export default ListGroups
