@@ -1,14 +1,27 @@
 import React, { useState, useEffect, useRef } from "react";
-import PropTypes from 'prop-types';
+import PropTypes from "prop-types";
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
 import { Toast } from "primereact/toast";
+import { IconField } from "primereact/iconfield";
+import { InputIcon } from "primereact/inputicon";
+import { InputText } from "primereact/inputtext";
+import { FilterMatchMode } from "primereact/api";
 
 const PaginationTopics = ({ data }) => {
   const [products, setProducts] = useState([]);
   const [expandedRows, setExpandedRows] = useState(null);
   const [groups, setGroups] = useState({});
   const toast = useRef(null);
+  const [globalFilterValue, setGlobalFilterValue] = useState("");
+  const [filters, setFilters] = useState({
+    global: { value: null, matchMode: FilterMatchMode.CONTAINS },
+    name: { value: null, matchMode: FilterMatchMode.STARTS_WITH },
+    "country.name": { value: null, matchMode: FilterMatchMode.STARTS_WITH },
+    representative: { value: null, matchMode: FilterMatchMode.IN },
+    status: { value: null, matchMode: FilterMatchMode.EQUALS },
+    verified: { value: null, matchMode: FilterMatchMode.EQUALS },
+  });
 
   useEffect(() => {
     setProducts(data);
@@ -54,6 +67,16 @@ const PaginationTopics = ({ data }) => {
     });
   };
 
+  const onGlobalFilterChange = (e) => {
+    const value = e.target.value;
+    let _filters = { ...filters };
+
+    _filters["global"].value = value;
+
+    setFilters(_filters);
+    setGlobalFilterValue(value);
+  };
+
   const rowExpansionTemplate = (data) => {
     const groupsData = groups[data._id] || [];
     return (
@@ -74,15 +97,21 @@ const PaginationTopics = ({ data }) => {
   };
 
   const header = (
-    <div className="flex flex-wrap justify-content-end gap-2">
-      <h3>Tabla Materias</h3>
-    </div>
+    <div className="flex justify-content-between align-items-center">
+    <h3>Tabla Materias</h3>
+    <IconField iconPosition="left">
+      <InputIcon className="pi pi-search" />
+      <InputText value={globalFilterValue} onChange={onGlobalFilterChange} placeholder="Palabra de busqueda" />
+    </IconField>
+  </div>
   );
 
   return (
     <div className="card p-4 m-4">
       <Toast ref={toast} />
       <DataTable
+        filters={filters}
+        filterDisplay="row"
         paginator
         rows={5}
         rowsPerPageOptions={[5, 10, 25, 50]}
@@ -108,7 +137,7 @@ const PaginationTopics = ({ data }) => {
 };
 
 PaginationTopics.propTypes = {
-  data: PropTypes.arrayOf(PropTypes.object).isRequired
+  data: PropTypes.arrayOf(PropTypes.object).isRequired,
 };
 
 export default PaginationTopics;
