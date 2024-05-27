@@ -65,11 +65,15 @@ const TableActionTools = ({
                 type="search"
                 className="form-control form-control-sm"
                 aria-controls="dataTable"
-                placeholder="Buscar por ID"
-                onKeyUp={(e) => (e.key === "Enter" ? findById(searchCode) : null)}
+                placeholder="Buscar por el código"
+                onKeyUp={(e) =>
+                  e.key === "Enter" ? findById(searchCode) : null
+                }
                 value={searchCode}
                 onChange={(e) => {
-                  setSearchCode(e.target.value);
+                  /^\d*$/.test(e.target.value)
+                    ? setSearchCode(e.target.value)
+                    : null;
                 }}
               />
             </label>
