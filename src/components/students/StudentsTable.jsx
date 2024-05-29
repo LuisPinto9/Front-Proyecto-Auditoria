@@ -3,6 +3,7 @@ import axios from "axios";
 import InfoPagination from "./InfoStudentsPagination";
 import TableActionTools from "./TableActionTools";
 import { Toast } from "primereact/toast";
+import ModalStudentInscriptions from "./ModalStudentInscriptions";
 
 const Table = () => {
   const [data, setData] = useState([]);
@@ -12,6 +13,7 @@ const Table = () => {
   const [sortDirection, setSortDirection] = useState("");
   const [totalRecords, setTotalRecords] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
+  const [groups, setGroups] = useState([]);
   const toast = useRef(null);
 
   useEffect(() => {
@@ -70,6 +72,33 @@ const Table = () => {
       console.error("Error fetching data:", error);
     }
     setIsLoading(false);
+  };
+
+  const findStudentInscriptions = async (studentId) => {
+    setGroups([]);
+    try {
+      const response = await axios.get(
+        `https://back-simulacion-por-computador.vercel.app/inscriptions/findIsncriptionsByStudent/${studentId}`
+      );
+
+      const inscriptionsData = response.data.data;
+
+      const groupsData = inscriptionsData.map((inscription) => ({
+        _id: inscription.group._id,
+        name: inscription.group.name,
+        grupo: inscription.group.grupo,
+        quotas: inscription.group.quotas,
+      }));
+
+      setGroups(groupsData);
+    } catch (error) {
+      toast.current.show({
+        severity: "error",
+        summary: "Inscripciones no encontradas",
+        detail: "El ID proporcionado no tiene inscripciones registradas.",
+        life: 3000,
+      });
+    }
   };
 
   const handlePageSizeChange = (event) => {
@@ -182,7 +211,20 @@ const Table = () => {
                 <tbody>
                   {data.map((student) => (
                     <tr key={student._id}>
-                      <td>{student.id}</td>
+                      <td>
+                        <button
+                          type="button"
+                          className="btn m-0 p-0"
+                          data-bs-toggle="modal"
+                          data-bs-target="#modalGroups"
+                          aria-label="Ver inscripciones del estudiante"
+                          style={{ border: "none", color: "blue" }}
+                          onClick={() => findStudentInscriptions(student._id)}
+                        >
+                          {student.id}
+                        </button>
+                        <ModalStudentInscriptions groups={groups} />
+                      </td>
                       <td>{student.Identification}</td>
                       <td>{student.code}</td>
                       <td>{student.documentType}</td>

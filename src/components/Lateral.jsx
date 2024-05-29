@@ -20,7 +20,7 @@ const Lateral = () => {
               className="text-white"
               style={{ textDecoration: "none" }}
             >
-              <span>University</span>
+              <span>Universidad</span>
             </Link>
           </div>
         </button>
@@ -70,7 +70,7 @@ const Lateral = () => {
             <div className="collapse ms-4" id="collapse-3">
               <div>
                 <button className="my-custom-button text-white">
-                <Link
+                  <Link
                     to="/listGroups"
                     className="text-white"
                     style={{ textDecoration: "none" }}
