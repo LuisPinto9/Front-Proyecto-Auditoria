@@ -7,6 +7,8 @@ import { IconField } from "primereact/iconfield";
 import { InputIcon } from "primereact/inputicon";
 import { InputText } from "primereact/inputtext";
 import { FilterMatchMode } from "primereact/api";
+import { ProgressBar } from 'primereact/progressbar';
+import { ProgressSpinner } from 'primereact/progressspinner';
 
 const PaginationTopics = ({ data }) => {
   const [products, setProducts] = useState([]);
@@ -17,15 +19,26 @@ const PaginationTopics = ({ data }) => {
   const [filters, setFilters] = useState({
     global: { value: null, matchMode: FilterMatchMode.CONTAINS },
     name: { value: null, matchMode: FilterMatchMode.STARTS_WITH },
-    "country.name": { value: null, matchMode: FilterMatchMode.STARTS_WITH },
-    representative: { value: null, matchMode: FilterMatchMode.IN },
-    status: { value: null, matchMode: FilterMatchMode.EQUALS },
-    verified: { value: null, matchMode: FilterMatchMode.EQUALS },
+    aula: { value: null, matchMode: FilterMatchMode.STARTS_WITH },
+    date_registration: { value: null, matchMode: FilterMatchMode.STARTS_WITH },
   });
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    setProducts(data);
-  }, []);
+    // Simula una carga de datos asíncrona
+    const loadData = async () => {
+      try {
+        // Aquí es donde cargarías tus datos. He usado un setTimeout para simular una carga de datos
+        await new Promise((resolve) => setTimeout(resolve, 2000));
+        setProducts(data);
+        setLoading(false);
+      } catch (error) {
+        console.error("Error loading data:", error);
+      }
+    };
+  
+    loadData();
+  }, [data]);
 
   const callGroupsTopics = (rowData) => {
     fetch(
@@ -109,7 +122,10 @@ const PaginationTopics = ({ data }) => {
   return (
     <div className="card p-4 m-4">
       <Toast ref={toast} />
-      <DataTable
+      {loading ? (
+        <ProgressSpinner mode="indeterminate" style={{width: '50px', height: '50px'}} strokeWidth="5" fill="var(--surface-ground)" animationDuration=".5s"/>
+      ) : (
+        <DataTable
         filters={filters}
         filterDisplay="row"
         paginator
@@ -132,6 +148,10 @@ const PaginationTopics = ({ data }) => {
         <Column field="date_registration" header="Fecha Registro" sortable />
         <Column field="quotas" header="Cupos" sortable />
       </DataTable>
+      )}
+
+
+      
     </div>
   );
 };

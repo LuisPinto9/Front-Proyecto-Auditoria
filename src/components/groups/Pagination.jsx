@@ -13,7 +13,7 @@ const Pagination = ({ data }) => {
     global: { value: null, matchMode: FilterMatchMode.CONTAINS },
     name: { value: null, matchMode: FilterMatchMode.STARTS_WITH },
     grupo: { value: null, matchMode: FilterMatchMode.STARTS_WITH },
-    status: { value: null, matchMode: FilterMatchMode.EQUALS },
+    topics: { value: null, matchMode: FilterMatchMode.STARTS_WITH },
     quotas: { value: null, matchMode: FilterMatchMode.EQUALS } // Agregamos el filtro para "quotas"
   });
 
