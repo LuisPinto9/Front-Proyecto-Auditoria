@@ -16,7 +16,7 @@ const ModalStudentInscriptions = ({ groups }) => {
               <h1
                 className="modal-title fs-5"
                 id="Modal de Grupos"
-                style={{ fontWeight: "bold" }}
+                style={{ fontWeight: "bold", color: "black"}}
               >
                 Asignaturas Inscritas
               </h1>
@@ -32,16 +32,14 @@ const ModalStudentInscriptions = ({ groups }) => {
                 <table className="table">
                   <thead>
                     <tr>
-                      <th scope="col">#</th>
                       <th scope="col">Nombre del Grupo</th>
                       <th scope="col">Grupo</th>
                       <th scope="col">Cupos</th>
                     </tr>
                   </thead>
                   <tbody>
-                    {groups.map((group, index) => (
+                    {groups.map((group) => (
                       <tr key={group._id}>
-                        <th scope="row">{index + 1}</th>
                         <td>{group.name}</td>
                         <td>{group.grupo}</td>
                         <td>{group.quotas}</td>

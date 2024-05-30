@@ -156,8 +156,7 @@ const Table = () => {
               <table className="table my-0 text-center" id="dataTable">
                 <thead>
                   <tr>
-                    <th>ID</th>
-                    <th>Identificación</th>
+                    <th></th>
                     <th onClick={() => handleSortChange("code")}>
                       <button className="btn btn-link p-0 m-0 d-flex align-items-center fw-bold text-decoration-none text-black">
                         Código
@@ -172,7 +171,6 @@ const Table = () => {
                         ></i>
                       </button>
                     </th>
-                    <th>Tipo de Documento</th>
                     <th onClick={() => handleSortChange("firstName")}>
                       <button className="btn btn-link p-0 m-0 d-flex align-items-center fw-bold text-decoration-none text-black">
                         Nombre
@@ -212,22 +210,20 @@ const Table = () => {
                   {data.map((student) => (
                     <tr key={student._id}>
                       <td>
-                        <button
+                        <i
                           type="button"
-                          className="btn m-0 p-0"
                           data-bs-toggle="modal"
                           data-bs-target="#modalGroups"
                           aria-label="Ver inscripciones del estudiante"
-                          style={{ border: "none", color: "blue" }}
                           onClick={() => findStudentInscriptions(student._id)}
-                        >
-                          {student.id}
-                        </button>
-                        <ModalStudentInscriptions groups={groups} />
+                          className="pi pi-angle-right btn"
+                          style={{
+                            border: "none",
+                            padding: 0,
+                          }}
+                        ></i>
                       </td>
-                      <td>{student.Identification}</td>
                       <td>{student.code}</td>
-                      <td>{student.documentType}</td>
                       <td>{student.firstName}</td>
                       <td>{student.lastName}</td>
                       <td>
@@ -245,6 +241,7 @@ const Table = () => {
               </table>
             </div>
           </div>
+          <ModalStudentInscriptions groups={groups} />
           <InfoPagination
             totalRecords={totalRecords}
             pageSize={pageSize}
