@@ -25,7 +25,7 @@ const Table = () => {
     setIsLoading(true);
     try {
       const response = await axios.get(
-        "https://back-simulacion-por-computador.vercel.app/students/countStudents"
+        `${import.meta.env.VITE_API_URL}/students/countStudents`
       );
       setTotalRecords(response.data.countStudents);
     } catch (error) {
@@ -38,7 +38,7 @@ const Table = () => {
     setIsLoading(true);
     try {
       const response = await axios.get(
-        `https://back-simulacion-por-computador.vercel.app/students/findCode`,
+        `${import.meta.env.VITE_API_URL}/students/findCode`,
         { params: { code: searchCode } }
       );
       setData(response.data.data);
@@ -57,7 +57,7 @@ const Table = () => {
     setIsLoading(true);
     try {
       const response = await axios.get(
-        `https://back-simulacion-por-computador.vercel.app/students`,
+        `${import.meta.env.VITE_API_URL}/students`,
         {
           params: {
             PageSize: pageSize,
@@ -78,7 +78,7 @@ const Table = () => {
     setGroups([]);
     try {
       const response = await axios.get(
-        `https://back-simulacion-por-computador.vercel.app/inscriptions/findIsncriptionsByStudent/${studentId}`
+        `${import.meta.env.VITE_API_URL}/inscriptions/findIsncriptionsByStudent/${studentId}`
       );
 
       const inscriptionsData = response.data.data;
