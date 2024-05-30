@@ -9,7 +9,7 @@ import { InputText } from "primereact/inputtext";
 import { FilterMatchMode } from "primereact/api";
 import { ProgressSpinner } from 'primereact/progressspinner';
 
-const PaginationTopics = ({ data }) => {
+const PaginationTopics = ({ data, loading }) => {
   const [products, setProducts] = useState([]);
   const [expandedRows, setExpandedRows] = useState(null);
   const [groups, setGroups] = useState({});
@@ -21,22 +21,9 @@ const PaginationTopics = ({ data }) => {
     aula: { value: null, matchMode: FilterMatchMode.STARTS_WITH },
     date_registration: { value: null, matchMode: FilterMatchMode.STARTS_WITH },
   });
-  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Simula una carga de datos asíncrona
-    const loadData = async () => {
-      try {
-        // Aquí es donde cargarías tus datos. He usado un setTimeout para simular una carga de datos
-        await new Promise((resolve) => setTimeout(resolve, 2000));
-        setProducts(data);
-        setLoading(false);
-      } catch (error) {
-        console.error("Error loading data:", error);
-      }
-    };
-  
-    loadData();
+    setProducts(data);
   }, [data]);
 
   const callGroupsTopics = (rowData) => {
@@ -157,6 +144,7 @@ const PaginationTopics = ({ data }) => {
 
 PaginationTopics.propTypes = {
   data: PropTypes.arrayOf(PropTypes.object).isRequired,
+  loading: PropTypes.bool.isRequired,
 };
 
 export default PaginationTopics;
