@@ -6,7 +6,7 @@ import PaginationTopics from '../components/Topics/PaginationTopics'
 const ListTopic = () => {
   const [data,setData] = useState([]);
     useEffect(() => {
-        fetch("https://back-simulacion-por-computador.vercel.app/topics")
+        fetch(`${import.meta.env.VITE_API_URL}/topics`)
           .then((res) => {
             if (!res.ok) {
               throw new Error('Network response was not ok');

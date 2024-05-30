@@ -7,7 +7,6 @@ import { IconField } from "primereact/iconfield";
 import { InputIcon } from "primereact/inputicon";
 import { InputText } from "primereact/inputtext";
 import { FilterMatchMode } from "primereact/api";
-import { ProgressBar } from 'primereact/progressbar';
 import { ProgressSpinner } from 'primereact/progressspinner';
 
 const PaginationTopics = ({ data }) => {
@@ -42,7 +41,7 @@ const PaginationTopics = ({ data }) => {
 
   const callGroupsTopics = (rowData) => {
     fetch(
-      `https://back-simulacion-por-computador.vercel.app/topics/groups/${rowData._id}`
+      `${import.meta.env.VITE_API_URL}/topics/groups/${rowData._id}`
     )
       .then((res) => {
         if (!res.ok) {
