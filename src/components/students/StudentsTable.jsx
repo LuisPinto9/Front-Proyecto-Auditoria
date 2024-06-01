@@ -78,7 +78,9 @@ const Table = () => {
     setGroups([]);
     try {
       const response = await axios.get(
-        `${import.meta.env.VITE_API_URL}/inscriptions/findIsncriptionsByStudent/${studentId}`
+        `${
+          import.meta.env.VITE_API_URL
+        }/inscriptions/findIsncriptionsByStudent/${studentId}`
       );
 
       const inscriptionsData = response.data.data;
@@ -95,7 +97,7 @@ const Table = () => {
       toast.current.show({
         severity: "error",
         summary: "Inscripciones no encontradas",
-        detail: "El ID proporcionado no tiene inscripciones registradas.",
+        detail: "El estudiante no tiene inscripciones registradas.",
         life: 3000,
       });
     }
