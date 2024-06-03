@@ -28,12 +28,26 @@ const Lateral = () => {
         <div>
           {/* Inicio colapse */}
           <div className="margin-right-38">
-            <Link
+            <button
               className="my-custom-button btn btn-primary"
-              to="/listStudents"
+              data-bs-toggle="collapse"
+              href="#collapse-1"
             >
               <i className="far fa-user"></i>&nbsp; Estudiantes
-            </Link>
+            </button>
+            <div className="collapse ms-4" id="collapse-1">
+              <div>
+                <button className="my-custom-button text-white">
+                  <Link
+                    to="/listStudents"
+                    className="text-white"
+                    style={{ textDecoration: "none" }}
+                  >
+                    <i className="pi pi-list"></i> Listar
+                  </Link>
+                </button>
+              </div>
+            </div>
           </div>
           {/* Inicio colapse */}
           <div className="margin-right-38">
