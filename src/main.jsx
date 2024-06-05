@@ -3,8 +3,8 @@ import ReactDOM from "react-dom/client";
 import Router from "./routes/Router.jsx";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.min.js";
-import "./assets/boostrap.css";
-import "./assets/style.css";
+import "./assets/css/boostrap.css";
+import "./assets/css/style.css";
 import "primereact/resources/themes/lara-light-cyan/theme.css";
 import 'primeicons/primeicons.css';
 

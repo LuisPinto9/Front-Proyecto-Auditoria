@@ -39,7 +39,7 @@ const Lateral = () => {
               <div>
                 <button className="my-custom-button text-white">
                   <Link
-                    to="/listStudents"
+                    to="/"
                     className="text-white"
                     style={{ textDecoration: "none" }}
                   >
@@ -95,16 +95,14 @@ const Lateral = () => {
               </div>
             </div>
           </div>
-          {/* Inicio colapse */}
-          <div className="margin-right-38">
+          {/* <div className="margin-right-38">
             <Link
               className="my-custom-button btn btn-primary"
               to="/listInscription"
             >
               <i className="far fa-user"></i>&nbsp; Inscripciones
             </Link>
-          </div>
-          {/* Fin colapse */}
+          </div> */}
         </div>
       </div>
     </nav>

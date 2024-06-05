@@ -83,7 +83,6 @@ const PaginationTopics = ({ data, loading }) => {
         <h5>Grupos de {data.name}</h5>
         {groupsData.length > 0 ? (
           <DataTable value={groupsData}>
-            <Column field="_id" header="ID" />
             <Column field="name" header="Nombre" />
             <Column field="grupo" header="Grupo" />
             <Column field="quotas" header="Cupos" />
