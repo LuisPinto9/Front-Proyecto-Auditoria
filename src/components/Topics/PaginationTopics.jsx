@@ -9,6 +9,13 @@ import { InputText } from "primereact/inputtext";
 import { FilterMatchMode } from "primereact/api";
 import { ProgressSpinner } from 'primereact/progressspinner';
 
+
+import { Button } from 'primereact/button';
+import * as XLSX from 'xlsx';
+import jsPDF from 'jspdf';
+import 'jspdf-autotable';
+
+
 const PaginationTopics = ({ data, loading }) => {
   const [products, setProducts] = useState([]);
   const [expandedRows, setExpandedRows] = useState(null);
@@ -76,6 +83,35 @@ const PaginationTopics = ({ data, loading }) => {
     setGlobalFilterValue(value);
   };
 
+
+
+
+  const exportToExcel = () => {
+    const worksheet = XLSX.utils.json_to_sheet(products);
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, "Sheet1");
+    XLSX.writeFile(workbook, "table_data.xlsx");
+  };
+  const exportToPDF = () => {
+    const doc = new jsPDF();
+    doc.text("Tabla Materias", 20, 10);
+    doc.autoTable({
+      head: [['Name', 'Aula', 'Creditos', 'Fecha Registro', 'Cupos']],
+      body: products.map(product => [
+        product.name,
+        product.aula,
+        product.credits,
+        product.date_registration,
+        product.quotas
+      ]),
+    });
+    doc.save('table_data.pdf');
+  };
+
+
+
+
+
   const rowExpansionTemplate = (data) => {
     const groupsData = groups[data._id] || [];
     return (
@@ -97,6 +133,16 @@ const PaginationTopics = ({ data, loading }) => {
   const header = (
     <div className="flex justify-content-between align-items-center">
     <h3>Tabla Materias</h3>
+
+
+    <div>
+      <button className="btn" onClick={exportToExcel} style={{border:"none"}}><i className="pi pi-file-excel" style={{fontSize:"2rem"}}></i></button>
+      <button className="btn" onClick={exportToPDF} style={{border:"none"}}><i className="pi pi-file-pdf" style={{fontSize:"2rem"}}></i></button>
+
+       
+      </div>
+
+
     <IconField iconPosition="left">
       <InputIcon className="pi pi-search" />
       <InputText value={globalFilterValue} onChange={onGlobalFilterChange} placeholder="Palabra de busqueda" />
