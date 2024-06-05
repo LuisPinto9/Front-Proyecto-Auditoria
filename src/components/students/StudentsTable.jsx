@@ -76,9 +76,9 @@ const Table = () => {
 
   const resetData = async () => {
     setIsLoading(true);
+    setSortBy("");
+    setSortDirection("");
     try {
-      setSortBy("");
-      setSortDirection("");
       const response = await axios.get(
         `${import.meta.env.VITE_API_URL}/students`,
         {
