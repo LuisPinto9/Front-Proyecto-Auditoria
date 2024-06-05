@@ -74,6 +74,29 @@ const Table = () => {
     setIsLoading(false);
   };
 
+  const resetData = async () => {
+    setIsLoading(true);
+    try {
+      setSortBy("");
+      setSortDirection("");
+      const response = await axios.get(
+        `${import.meta.env.VITE_API_URL}/students`,
+        {
+          params: {
+            PageSize: pageSize,
+            PageNumber: pageNumber,
+            SortBy: sortBy,
+            SortDirection: sortDirection,
+          },
+        }
+      );
+      setData(response.data.data);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+    setIsLoading(false);
+  };
+
   const findStudentInscriptions = async (studentId) => {
     setGroups([]);
     try {
@@ -119,9 +142,6 @@ const Table = () => {
     setSortDirection(newSortDirection);
   };
 
-
-
-
   return (
     <div className="container-fluid">
       <div className="card shadow">
@@ -137,8 +157,9 @@ const Table = () => {
             fetchData={fetchData}
             dataSize={data.length}
             students={data}
+            resetData={resetData}
           />
-         
+
           <div
             className="table-responsive table mt-2"
             id="dataTable"
