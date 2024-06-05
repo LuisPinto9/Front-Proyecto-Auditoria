@@ -103,7 +103,7 @@ const TableActionTools = ({
             >
               <i className="pi pi-file-pdf" style={{ fontSize: "1.5rem" }}></i>
             </button>
-            <button
+            {/* <button
               className="btn"
               onClick={resetData}
               style={{ border: "none" }}
@@ -112,7 +112,7 @@ const TableActionTools = ({
                 className="pi pi-filter-slash"
                 style={{ fontSize: "1.3rem" }}
               ></i>
-            </button>
+            </button> */}
             <button
               type="button"
               className="btn"

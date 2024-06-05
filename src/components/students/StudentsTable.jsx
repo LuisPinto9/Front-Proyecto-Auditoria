@@ -78,6 +78,23 @@ const Table = () => {
     setIsLoading(true);
     setSortBy("");
     setSortDirection("");
+    try {
+      const response = await axios.get(
+        `${import.meta.env.VITE_API_URL}/students`,
+        {
+          params: {
+            PageSize: pageSize,
+            PageNumber: pageNumber,
+            SortBy: sortBy,
+            SortDirection: sortDirection,
+          },
+        }
+      );
+      setData(response.data.data);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+    setIsLoading(false);
   };
 
   const findStudentInscriptions = async (studentId) => {
