@@ -1,17 +1,50 @@
 import React, { useState, useEffect } from "react";
-
+import * as XLSX from 'xlsx';
+import jsPDF from 'jspdf';
+import 'jspdf-autotable';
 const TableActionTools = ({
   pageSize,
   handlePageSizeChange,
   findById,
   fetchData,
   dataSize,
+  students
 }) => {
   const [searchCode, setSearchCode] = useState("");
 
   useEffect(() => {
     searchCode ? null : dataSize !== 1 ? null : fetchData();
   }, [searchCode]);
+
+
+
+
+  const exportToExcel = () => {
+    const worksheet = XLSX.utils.json_to_sheet(students);
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, "Estudiantes");
+    XLSX.writeFile(workbook, "estudiantes.xlsx");
+  };
+
+  const exportToPDF = () => {
+    const doc = new jsPDF();
+    doc.text("Información de Estudiantes", 20, 10);
+    doc.autoTable({
+      head: [['Código', 'Nombre', 'Apellido', 'Fecha de Nacimiento', 'Teléfono', 'Email', 'Estado']],
+      body: students.map(student => [
+        student.code,
+        student.firstName,
+        student.lastName,
+        new Date(student.birthdate).toLocaleDateString("es-ES", { day: "numeric", month: "numeric", year: "numeric" }),
+        student.cellphone,
+        student.email,
+        student.state
+      ]),
+    });
+    doc.save('estudiantes.pdf');
+  };
+
+
 
   return (
     <>
@@ -22,6 +55,7 @@ const TableActionTools = ({
             className="dataTables_length"
             aria-controls="dataTable"
           >
+
             <label className="form-label">
               Mostrar&nbsp;
               <select
@@ -36,6 +70,9 @@ const TableActionTools = ({
               </select>
               &nbsp;
             </label>
+
+         
+
           </div>
         </div>
         <div className="col-md-6">
@@ -43,6 +80,11 @@ const TableActionTools = ({
             className="text-md-end align-items-center dataTables_filter"
             id="dataTable_filter"
           >
+
+
+          <button className="btn" onClick={exportToExcel} style={{border:"none"}}><i className="pi pi-file-excel" style={{fontSize:"2rem"}}></i></button>
+          <button className="btn" onClick={exportToPDF} style={{border:"none"}}><i className="pi pi-file-pdf" style={{fontSize:"2rem"}}></i></button>
+    
             <button
               type="button"
               className="btn"

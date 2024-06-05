@@ -138,8 +138,7 @@ const PaginationTopics = ({ data, loading }) => {
     <div>
       <button className="btn" onClick={exportToExcel} style={{border:"none"}}><i className="pi pi-file-excel" style={{fontSize:"2rem"}}></i></button>
       <button className="btn" onClick={exportToPDF} style={{border:"none"}}><i className="pi pi-file-pdf" style={{fontSize:"2rem"}}></i></button>
-
-       
+    
       </div>
 
 

@@ -119,6 +119,9 @@ const Table = () => {
     setSortDirection(newSortDirection);
   };
 
+
+
+
   return (
     <div className="container-fluid">
       <div className="card shadow">
@@ -133,7 +136,9 @@ const Table = () => {
             findById={findByID}
             fetchData={fetchData}
             dataSize={data.length}
+            students={data}
           />
+         
           <div
             className="table-responsive table mt-2"
             id="dataTable"
