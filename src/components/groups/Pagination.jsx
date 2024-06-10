@@ -9,6 +9,11 @@ import { InputText } from "primereact/inputtext";
 import { FilterMatchMode } from "primereact/api";
 import { ProgressSpinner } from 'primereact/progressspinner';
 
+import * as XLSX from 'xlsx';
+import jsPDF from 'jspdf';
+import 'jspdf-autotable';
+
+
 const PaginationGroups = ({ data, loading }) => {
   const [groups, setGroups] = useState([]);
   const [expandedRows, setExpandedRows] = useState(null);
@@ -46,7 +51,26 @@ const PaginationGroups = ({ data, loading }) => {
         console.log("Fetch error:", error);
       });
   };
+  const exportToExcel = () => {
+    const worksheet = XLSX.utils.json_to_sheet(groups);
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, "Grupos");
+    XLSX.writeFile(workbook, "grupos.xlsx");
+  };
 
+  const exportToPDF = () => {
+    const doc = new jsPDF();
+    doc.text("Tabla Grupos", 20, 10);
+    doc.autoTable({
+      head: [['Nombre', 'Grupo', 'Cupos']],
+      body: groups.map(group => [
+        group.name,
+        group.grupo,
+        group.quotas
+      ]),
+    });
+    doc.save('grupos.pdf');
+  };
   const onRowExpand = (event) => {
     toast.current.show({
       severity: "info",
@@ -100,6 +124,12 @@ const PaginationGroups = ({ data, loading }) => {
   const header = (
     <div className="flex justify-content-between align-items-center">
       <h3>Tabla Grupos</h3>
+      <div>
+      <button className="btn" onClick={exportToExcel} style={{border:"none"}}><i className="pi pi-file-excel" style={{fontSize:"2rem"}}></i></button>
+      <button className="btn" onClick={exportToPDF} style={{border:"none"}}><i className="pi pi-file-pdf" style={{fontSize:"2rem"}}></i></button>
+    
+      </div>
+
       <IconField iconPosition="left">
         <InputIcon className="pi pi-search" />
         <InputText value={globalFilterValue} onChange={onGlobalFilterChange} placeholder="Palabra de búsqueda" />
