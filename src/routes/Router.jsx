@@ -5,14 +5,14 @@ import ListTopic from "../pages/ListTopic";
 import ListInscription from "../pages/ListInscription";
 import ListStudents from "../pages/ListStudents";
 import ListGroups from "../pages/ListGroups";
+import Login from "../pages/Login";
 
-
-{/* <Route exact path="/estudiantes" Component={Student} /> */}
 const Router = () => {
   return (
     <BrowserRouter>
       <Routes>
       <Route exact path="/" Component={ListStudents} />
+      <Route exact path="/login" Component={Login} />
         {/* <Route exact path="/" Component={Dashboard} /> */}
         <Route exact path="/listTopic" Component={ListTopic} />
         {/* <Route exact path="/listStudents" Component={ListStudents} /> */}
