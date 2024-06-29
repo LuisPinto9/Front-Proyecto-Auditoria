@@ -1,6 +1,13 @@
-import React, { useState } from "react";
+import React, { useState , useEffect } from "react";
+import { SaveLocalStorage } from "./SaveLocalStorage"; 
+import { useNavigate } from "react-router-dom";
 
 const Login = () => {
+
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const navigate = useNavigate();
+
   const [file, setFile] = useState(null);
   const [response, setResponse] = useState("");
 
@@ -8,6 +15,7 @@ const Login = () => {
     setFile(event.target.files[0]);
   };
 
+  
   const uploadFile = async () => {
     const formData = new FormData();
     formData.append("file", file);
@@ -19,7 +27,33 @@ const Login = () => {
 
     const result = await response.text();
     setResponse(result);
+
+    
+  };  
+
+  const handleLogin = async (event) => {
+    event.preventDefault();
+    const loginData = { username: email, password };
+
+    const response = await fetch("http://localhost:4000/login", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(loginData),
+    });
+
+    const result = await response.json();
+
+    if (result.state) {
+      SaveLocalStorage("authToken", result.token);
+      alert("Login exitoso");
+      navigate("/listInscription"); 
+    } else {
+      alert("Error en el inicio de sesión: " + result.error);
+    }
   };
+
 
   return (
     <div className="bg-gradient-primary" style={{ height: "100vh" }}>
@@ -46,7 +80,7 @@ const Login = () => {
                       <div className="text-center">
                         <h4 className="text-dark mb-4">Inicio de Sesión</h4>
                       </div>
-                      <form className="user" id="login-form">
+                      <form className="user" id="login-form" onSubmit={handleLogin}>
                         <div className="mb-3">
                           <input
                             className="form-control form-control-user"
@@ -55,6 +89,8 @@ const Login = () => {
                             aria-describedby="emailHelp"
                             placeholder="Enter Email Address..."
                             name="email"
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
                           />
                         </div>
                         <div className="mb-3">
@@ -64,6 +100,8 @@ const Login = () => {
                             id="exampleInputPassword"
                             placeholder="Password"
                             name="password"
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
                           />
                         </div>
                         <div className="mb-3">
