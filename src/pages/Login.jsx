@@ -1,15 +1,15 @@
 import React, { useState , useEffect } from "react";
 import { SaveLocalStorage } from "./SaveLocalStorage"; 
-
+import { useNavigate } from "react-router-dom";
 
 const Login = () => {
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const navigate = useNavigate();
 
   const [file, setFile] = useState(null);
   const [response, setResponse] = useState("");
-
 
   const handleFileChange = (event) => {
     setFile(event.target.files[0]);
@@ -27,6 +27,8 @@ const Login = () => {
 
     const result = await response.text();
     setResponse(result);
+
+    
   };  
 
   const handleLogin = async (event) => {
@@ -46,7 +48,7 @@ const Login = () => {
     if (result.state) {
       SaveLocalStorage("authToken", result.token);
       alert("Login exitoso");
-      // Redirigir o realizar otras acciones necesarias
+      navigate("/listInscription"); 
     } else {
       alert("Error en el inicio de sesión: " + result.error);
     }
