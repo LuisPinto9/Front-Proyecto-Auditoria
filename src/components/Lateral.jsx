@@ -39,7 +39,7 @@ const Lateral = () => {
               <div>
                 <button className="my-custom-button text-white">
                   <Link
-                    to="/"
+                    to="/listStudents"
                     className="text-white"
                     style={{ textDecoration: "none" }}
                   >
