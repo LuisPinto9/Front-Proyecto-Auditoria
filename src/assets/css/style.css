@@ -19,3 +19,19 @@
   font-size: 18px;
   font-weight: bold;
 }
+
+/* Autenticacion Facial */
+.butonFacial, .butonUploadFile{
+  margin-top: 1.5rem;
+  color: white;
+}
+
+
+
+.beautifulInputFile {
+  background-color: #f0f0f0;
+  border: 2px solid #ddd;
+  border-radius: 4px;
+  cursor: pointer;
+  color: #333;
+}

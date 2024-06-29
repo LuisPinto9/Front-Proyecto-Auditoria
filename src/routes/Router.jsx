@@ -6,6 +6,7 @@ import ListInscription from "../pages/ListInscription";
 import ListStudents from "../pages/ListStudents";
 import ListGroups from "../pages/ListGroups";
 import Login from "../pages/Login";
+import SecondValidate from "../pages/SecondValidate";
 
 const Router = () => {
   return (
@@ -13,6 +14,7 @@ const Router = () => {
       <Routes>
       <Route exact path="/" Component={Login} />
         {/* <Route exact path="/" Component={Dashboard} /> */}
+        <Route exact path="/secondValidation" Component={SecondValidate} />
         <Route exact path="/listTopic" Component={ListTopic} />
         <Route exact path="/listStudents" Component={ListStudents} />
         <Route exact path="/listInscription" Component={ListInscription} />

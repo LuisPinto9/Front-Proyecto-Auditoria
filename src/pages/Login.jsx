@@ -1,4 +1,4 @@
-import React, { useState , useEffect } from "react";
+import React, { useState} from "react";
 import { SaveLocalStorage } from "./SaveLocalStorage"; 
 import { useNavigate } from "react-router-dom";
 
@@ -8,28 +8,7 @@ const Login = () => {
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
 
-  const [file, setFile] = useState(null);
-  const [response, setResponse] = useState("");
 
-  const handleFileChange = (event) => {
-    setFile(event.target.files[0]);
-  };
-
-  
-  const uploadFile = async () => {
-    const formData = new FormData();
-    formData.append("file", file);
-
-    const response = await fetch("http://localhost:4000/login/upload", {
-      method: "POST",
-      body: formData,
-    });
-
-    const result = await response.text();
-    setResponse(result);
-
-    
-  };  
 
   const handleLogin = async (event) => {
     event.preventDefault();
@@ -47,8 +26,8 @@ const Login = () => {
 
     if (result.state) {
       SaveLocalStorage("authToken", result.token);
-      alert("Login exitoso");
-      navigate("/listInscription"); 
+      SaveLocalStorage("imageURL",result.data.image)
+      navigate("/secondValidation"); 
     } else {
       alert("Error en el inicio de sesión: " + result.error);
     }
@@ -67,8 +46,7 @@ const Login = () => {
                     <div
                       className="flex-grow-1 bg-login-image"
                       style={{
-                        backgroundImage: `url(${
-                          response ? response : "images/dogs/image3.jpeg"
+                        backgroundImage: `url(${"images/dogs/image3.jpeg"
                         })`,
                         height: "100%",
                         width: "100%",
@@ -114,8 +92,6 @@ const Login = () => {
                           Iniciar Sesión
                         </button>
                       </form>
-                      <input type="file" onChange={handleFileChange} />
-                      <button onClick={uploadFile}>Upload</button>
                     </div>
                   </div>
                 </div>
