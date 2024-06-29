@@ -36,6 +36,8 @@ const Login = () => {
                         backgroundImage: `url(${
                           response ? response : "images/dogs/image3.jpeg"
                         })`,
+                        height: "100%",
+                        width: "100%",
                       }}
                     ></div>
                   </div>
@@ -70,14 +72,12 @@ const Login = () => {
                         <button
                           className="btn btn-primary d-block btn-user w-100"
                           type="submit"
-                          id="login-form"
                         >
                           Iniciar Sesión
                         </button>
                       </form>
                       <input type="file" onChange={handleFileChange} />
                       <button onClick={uploadFile}>Upload</button>
-                      <img src={response} alt="" />
                     </div>
                   </div>
                 </div>
