@@ -47,6 +47,18 @@ const Lateral = () => {
                   </Link>
                 </button>
               </div>
+
+              <div>
+                <button className="my-custom-button text-white">
+                  <Link
+                    to="/saveStudent"
+                    className="text-white"
+                    style={{ textDecoration: "none" }}
+                  >
+                    <i className="pi pi-save"></i> Guardar
+                  </Link>
+                </button>
+              </div>
             </div>
           </div>
           {/* Inicio colapse */}

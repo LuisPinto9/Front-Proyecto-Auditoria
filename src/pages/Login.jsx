@@ -28,6 +28,7 @@ const Login = () => {
     if (result.state) {
       SaveLocalStorage("authToken", result.token);
       SaveLocalStorage("imageURL",result.data.image)
+      console.log(result.data)
       navigate("/secondValidation"); 
     } else {
       alert("Error en el inicio de sesión: " + result.error);
