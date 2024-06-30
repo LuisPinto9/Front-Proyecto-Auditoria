@@ -7,16 +7,25 @@ import ListGroups from "../pages/ListGroups";
 import Login from "../pages/Login";
 import SecondValidate from "../pages/SecondValidate";
 import SaveStudent from "../pages/SaveStudent";
+import CheckRoleAuth from "../middleware/CheckRoleAuth";
 
 const Router = () => {
   return (
     <BrowserRouter>
       <Routes>
-      <Route exact path="/" Component={Login} />
+        <Route exact path="/" Component={Login} />
         {/* <Route exact path="/" Component={Dashboard} /> */}
         <Route exact path="/secondValidation" Component={SecondValidate} />
         <Route exact path="/listTopic" Component={ListTopic} />
-        <Route exact path="/listStudents" Component={ListStudents} />
+        <Route
+          exact
+          path="/listStudents"
+          element={
+            <CheckRoleAuth requiredType="admin">
+              <ListStudents />
+            </CheckRoleAuth>
+          }
+        />
         <Route exact path="/listInscription" Component={ListInscription} />
         <Route exact path="/listGroups" Component={ListGroups} />
         <Route exact path="/saveStudent" Component={SaveStudent} />
