@@ -14,6 +14,7 @@ const Router = () => {
     <BrowserRouter>
       <Routes>
         <Route exact path="/" Component={Login} />
+        {/* <Route path="*" component={Error404} /> */}
         {/* <Route exact path="/" Component={Dashboard} /> */}
         <Route exact path="/secondValidation" Component={SecondValidate} />
         <Route exact path="/listTopic" Component={ListTopic} />
