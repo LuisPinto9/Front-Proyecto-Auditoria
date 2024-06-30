@@ -30,14 +30,15 @@ const CreateStudent = () => {
   const [programs, setPrograms] = useState([]);
 
   useEffect(() => {
-    axios.get(`${import.meta.env.VITE_API_URL}/programs/`)
+    axios
+      .get(`${import.meta.env.VITE_API_URL}/programs/`)
       .then((response) => {
         // Mapear la respuesta para ajustarse a la estructura deseada
-        const listPrograms = response.data.data.map(program => ({
+        const listPrograms = response.data.data.map((program) => ({
           name: program.name,
-          code: program._id
+          code: program._id,
         }));
-  
+
         setPrograms(listPrograms);
       })
       .catch((error) => {
@@ -45,7 +46,7 @@ const CreateStudent = () => {
       });
   }, []);
 
-  const typies = [
+  const types = [
     { name: "Cedula", code: "CC" },
     { name: "Tarjeta Identidad", code: "TI" },
   ];
@@ -60,15 +61,17 @@ const CreateStudent = () => {
     { name: "administrador", code: "admin" },
   ];
 
-
   const handleFileSelect = (e) => {
-    // Actualizar el estado con el primer archivo seleccionado
     setFile(e.files[0]);
   };
 
   const uploadFile = async () => {
     if (!file) {
-      toast.current.show({ severity: 'warn', summary: 'Advertencia', detail: 'No hay archivo seleccionado.' });
+      toast.current.show({
+        severity: "warn",
+        summary: "Advertencia",
+        detail: "No hay archivo seleccionado.",
+      });
       return;
     }
 
@@ -76,61 +79,90 @@ const CreateStudent = () => {
     formData.append("file", file);
 
     try {
-      const response = await fetch(`${import.meta.env.VITE_API_URL}/login/upload`, {
-        method: "POST",
-        body: formData,
-      });
+      const response = await fetch(
+        `${import.meta.env.VITE_API_URL}/login/upload`,
+        {
+          method: "POST",
+          body: formData,
+        }
+      );
 
       const result = await response.text();
-      console.log(result)
-      setUrlImage(result)
-      toast.current.show({ severity: 'success', summary: 'Éxito', detail: 'Archivo subido correctamente.' });
+      console.log(result);
+      setUrlImage(result);
+      toast.current.show({
+        severity: "success",
+        summary: "Éxito",
+        detail: "Archivo subido correctamente.",
+      });
     } catch (error) {
       console.error("Error uploading file:", error);
-      toast.current.show({ severity: 'error', summary: 'Error', detail: 'Error subiendo el archivo.' });
+      toast.current.show({
+        severity: "error",
+        summary: "Error",
+        detail: "Error subiendo el archivo.",
+      });
     }
   };
 
   const handleSave = () => {
     const studentData = {
-        id: id,
-        Identification: identification,
-        code: code,
-        documentType: selectedType ? selectedType.code : "Ninguno",
-        firstName: firstName,
-        lastName: lastName,
-        birthdate: date,
-        cellphone: cellphone,
-        email: email,
-        state: selectedState ? selectedState.code : "Ninguno",
-        program: selectedProgram ? selectedProgram.code : "Ninguno"
-      };
+      id: id,
+      Identification: identification,
+      code: code,
+      documentType: selectedType ? selectedType.code : "Ninguno",
+      firstName: firstName,
+      lastName: lastName,
+      birthdate: date,
+      cellphone: cellphone,
+      email: email,
+      state: selectedState ? selectedState.code : "Ninguno",
+      program: selectedProgram ? selectedProgram.code : "Ninguno",
+    };
     const userData = {
-        username: email,
-        password: password,
-        role: selectedRole ? selectedRole.code : "Ninguno",
-        image: urlImage,
-    }
+      username: email,
+      password: password,
+      role: selectedRole ? selectedRole.code : "Ninguno",
+      image: urlImage,
+    };
 
-      axios.post(`${import.meta.env.VITE_API_URL}/students/`, studentData)
+    axios
+      .post(`${import.meta.env.VITE_API_URL}/students/`, studentData)
       .then((response) => {
         console.log(response.data.data);
-        toast.current.show({ severity: 'success', summary: 'Éxito', detail: 'Estudiante Guardado.' });
+        toast.current.show({
+          severity: "success",
+          summary: "Éxito",
+          detail: "Estudiante Guardado.",
+        });
       })
       .catch((error) => {
-        console.log(error)
-        toast.current.show({ severity: 'error', summary: 'Error', detail: 'Error guardando el estudiante.' });
-    });
+        console.log(error);
+        toast.current.show({
+          severity: "error",
+          summary: "Error",
+          detail: "Error guardando el estudiante.",
+        });
+      });
 
-    axios.post(`${import.meta.env.VITE_API_URL}/login/save`, userData)
+    axios
+      .post(`${import.meta.env.VITE_API_URL}/users/save`, userData)
       .then((response) => {
         console.log(response.data.data);
-        toast.current.show({ severity: 'success', summary: 'Éxito', detail: 'Usuario Creado.' });
+        toast.current.show({
+          severity: "success",
+          summary: "Éxito",
+          detail: "Usuario Creado.",
+        });
       })
       .catch((error) => {
-        console.log(error)
-        toast.current.show({ severity: 'error', summary: 'Error', detail: 'Error creando el usuario.' });
-    });
+        console.log(error);
+        toast.current.show({
+          severity: "error",
+          summary: "Error",
+          detail: "Error creando el usuario.",
+        });
+      });
   };
 
   return (
@@ -148,22 +180,22 @@ const CreateStudent = () => {
           </div>
 
           <div className="p-inputgroup mb-3">
-            <span className="p-inputgroup-addon">Identificacion</span>
+            <span className="p-inputgroup-addon">Identificación</span>
             <InputNumber
               useGrouping={false}
               value={identification}
               onValueChange={(e) => setIdentification(e.value)}
-              placeholder="Identificacion"
+              placeholder="Identificación"
             />
           </div>
 
           <div className="p-inputgroup mb-3">
-            <span className="p-inputgroup-addon">Codigo</span>
+            <span className="p-inputgroup-addon">Código</span>
             <InputNumber
               useGrouping={false}
               value={code}
               onValueChange={(e) => setCode(e.value)}
-              placeholder="Codigo"
+              placeholder="Código"
             />
           </div>
 
@@ -171,7 +203,7 @@ const CreateStudent = () => {
             <Dropdown
               value={selectedType}
               onChange={(e) => setSelectedType(e.value)}
-              options={typies}
+              options={types}
               optionLabel="name"
               placeholder="Select type"
               className="w-full"
@@ -187,7 +219,7 @@ const CreateStudent = () => {
             <InputText
               value={firstName}
               onChange={(e) => setFirstName(e.target.value)}
-              placeholder="primer nombre"
+              placeholder="Primer nombre"
             />
           </div>
 

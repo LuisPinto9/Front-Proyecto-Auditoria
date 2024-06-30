@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { ProgressSpinner } from 'primereact/progressspinner';
+import { ProgressSpinner } from "primereact/progressspinner";
 
 const FileUpload = () => {
   const [file, setFile] = useState(null);
@@ -22,10 +22,13 @@ const FileUpload = () => {
     formData.append("file", file);
 
     try {
-      const response = await fetch(`${import.meta.env.VITE_API_URL}/login/upload`, {
-        method: "POST",
-        body: formData,
-      });
+      const response = await fetch(
+        `${import.meta.env.VITE_API_URL}/login/upload`,
+        {
+          method: "POST",
+          body: formData,
+        }
+      );
 
       const result = await response.text();
       setImage2(result);
@@ -37,7 +40,7 @@ const FileUpload = () => {
   };
 
   const handleLogin = async () => {
-    setIsLoading(true);//nicia elSpinner
+    setIsLoading(true); //nicia elSpinner
     const loginData = {
       imageUrl1: trueImage[0],
       imageUrl2: image2,
@@ -91,7 +94,7 @@ const FileUpload = () => {
         console.error("Error:", error);
       }
     } finally {
-    setIsLoading(false);
+      setIsLoading(false);
       clearTimeout(timeoutId);
     }
   };
@@ -102,7 +105,6 @@ const FileUpload = () => {
         type="file"
         onChange={handleFileChange}
       />
-      
 
       <button
         className="btn btn-success d-block btn-user w-100 butonUploadFile"
@@ -112,8 +114,8 @@ const FileUpload = () => {
       </button>
 
       <div className="card flex justify-content-center">
-            {isUploading ? <ProgressSpinner /> : null}
-        </div>
+        {isUploading ? <ProgressSpinner /> : null}
+      </div>
 
       <button
         className="btn btn-primary d-block btn-user w-100 butonFacial"
@@ -123,8 +125,8 @@ const FileUpload = () => {
       </button>
 
       <div className="card flex justify-content-center">
-            {isLoading ? <ProgressSpinner /> : null}
-        </div>
+        {isLoading ? <ProgressSpinner /> : null}
+      </div>
     </>
   );
 };

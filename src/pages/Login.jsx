@@ -1,5 +1,5 @@
 import React, { useState, useRef } from "react";
-import { SaveLocalStorage } from "../utils/SaveLocalStorage";
+import { SaveLocalStorage } from "../middleware/SaveLocalStorage";
 import { useNavigate } from "react-router-dom";
 import { Toast } from "primereact/toast";
 
@@ -21,10 +21,10 @@ const Login = () => {
     });
 
     const result = await response.json();
-
     if (result.state) {
       SaveLocalStorage("authToken", result.token);
       SaveLocalStorage("imageURL", result.data.image);
+      SaveLocalStorage("username", result.data.username);
       navigate("/secondValidation");
     } else {
       toast.current.show({
