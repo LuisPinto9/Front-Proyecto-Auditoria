@@ -14,13 +14,14 @@ const Login = () => {
     event.preventDefault();
     const loginData = { username: email, password };
 
-    const response = await fetch("http://localhost:4000/login", {
+    const response = await fetch(`${import.meta.env.VITE_API_URL}/login/upload`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify(loginData),
     });
+
 
     const result = await response.json();
 

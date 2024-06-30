@@ -121,10 +121,14 @@ const SecondValidate = () => {
       const formData = new FormData();
       formData.append("file", blob, "capturedImage.jpg");
 
-      const response = await fetch("http://localhost:4000/login/upload", {
-        method: "POST",
-        body: formData,
-      });
+      const response = await fetch(
+        `${import.meta.env.VITE_API_URL}/login/upload`,
+        {
+          method: "POST",
+          body: formData,
+        });
+
+
 
       const result = await response.text();
       // SaveLocalStorage("imageCapture",result)
