@@ -47,8 +47,9 @@ const CreateStudent = () => {
   }, []);
 
   const types = [
-    { name: "Cedula", code: "CC" },
+    { name: "Cédula", code: "CC" },
     { name: "Tarjeta Identidad", code: "TI" },
+    { name: "Cédula de extranjería", code: "CE" },
   ];
 
   const states = [
@@ -106,6 +107,9 @@ const CreateStudent = () => {
   };
 
   const handleSave = () => {
+    if (!validateFields()) {
+      return;
+    }
     const studentData = {
       id: id,
       Identification: identification,
@@ -126,6 +130,7 @@ const CreateStudent = () => {
       image: urlImage,
     };
 
+    uploadFile();
     axios
       .post(`${import.meta.env.VITE_API_URL}/students/`, studentData)
       .then((response) => {
@@ -165,8 +170,74 @@ const CreateStudent = () => {
       });
   };
 
+  const validateFields = () => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      toast.current.show({
+        severity: "warn",
+        summary: "Advertencia",
+        detail: "El correo electrónico no es válido.",
+      });
+      return false;
+    }
+
+    if (cellphone && cellphone.toString().length !== 10) {
+      toast.current.show({
+        severity: "warn",
+        summary: "Advertencia",
+        detail: "El número de celular debe tener 10 dígitos.",
+      });
+      return false;
+    }
+    const requiredFields = [
+      { value: firstName, name: "Primer nombre" },
+      { value: lastName, name: "Apellido" },
+      { value: email, name: "Correo" },
+      { value: password, name: "Contraseña" },
+      { value: selectedType, name: "Tipo de documento" },
+      { value: selectedState, name: "Estado" },
+      { value: selectedRole, name: "Rol" },
+      { value: selectedProgram, name: "Programa" },
+      { value: date, name: "Fecha de nacimiento" },
+      { value: identification, name: "Identificación" },
+      { value: code, name: "Código" },
+      { value: cellphone, name: "Celular" },
+    ];
+
+    const emptyField = requiredFields.find((field) => !field.value);
+    if (emptyField) {
+      toast.current.show({
+        severity: "warn",
+        summary: "Advertencia",
+        detail: `Todos los campos son requeridos. Por favor, complete el campo "${emptyField.name}".`,
+      });
+      return false;
+    }
+
+    return true;
+  };
+
+  const cleanFields = () => {
+    setSelectedType(null);
+    setSelectedState(null);
+    setSelectedRole(null);
+    setSelectedProgram(null);
+    setDate(null);
+    setPassword("");
+    setId(null);
+    setIdentification(null);
+    setCode(null);
+    setFirstName("");
+    setLastName("");
+    setEmail("");
+    setCellphone(null);
+    setFile(null);
+    setUrlImage(null);
+  };
+
   return (
     <div className="card p-4 m-4">
+      <h3>Crear Usuarios</h3>
       <div className="row">
         <div className="col-md-6">
           <div className="p-inputgroup mb-3">
@@ -175,7 +246,7 @@ const CreateStudent = () => {
               useGrouping={false}
               value={id}
               onValueChange={(e) => setId(e.value)}
-              placeholder="ID"
+              placeholder="Ingrese solo números"
             />
           </div>
 
@@ -185,17 +256,17 @@ const CreateStudent = () => {
               useGrouping={false}
               value={identification}
               onValueChange={(e) => setIdentification(e.value)}
-              placeholder="Identificación"
+              placeholder="Ingrese solo números"
             />
           </div>
 
           <div className="p-inputgroup mb-3">
-            <span className="p-inputgroup-addon">Código</span>
+            <span className="p-inputgroup-addon">Código estudiantil</span>
             <InputNumber
               useGrouping={false}
               value={code}
               onValueChange={(e) => setCode(e.value)}
-              placeholder="Código"
+              placeholder="Ingrese solo números"
             />
           </div>
 
@@ -205,7 +276,7 @@ const CreateStudent = () => {
               onChange={(e) => setSelectedType(e.value)}
               options={types}
               optionLabel="name"
-              placeholder="Select type"
+              placeholder="Tipo de identificación"
               className="w-full"
             />
           </div>
@@ -219,25 +290,27 @@ const CreateStudent = () => {
             <InputText
               value={firstName}
               onChange={(e) => setFirstName(e.target.value)}
-              placeholder="Primer nombre"
+              placeholder="Nombre"
             />
           </div>
 
           <div className="p-inputgroup mb-3">
-            <span className="p-inputgroup-addon ">LN</span>
+            <span className="p-inputgroup-addon ">Apellido</span>
             <InputText
               value={lastName}
               onChange={(e) => setLastName(e.target.value)}
-              placeholder="LastName"
             />
           </div>
 
-          <div className="card mb-3">
+          <div className="p-inputgroup mb-3">
+            <span className="p-inputgroup-addon ">Fecha de nacimiento</span>
             <Calendar value={date} onChange={(e) => setDate(e.value)} />
           </div>
 
           <div className="p-inputgroup mb-3">
-            <span className="p-inputgroup-addon">Celular</span>
+            <span className="p-inputgroup-addon">
+              <i className="pi pi-mobile"></i>
+            </span>
             <InputNumber
               useGrouping={false}
               value={cellphone}
@@ -249,11 +322,13 @@ const CreateStudent = () => {
 
         <div className="col-md-6 mb-3">
           <div className="p-inputgroup mb-3">
-            <span className="p-inputgroup-addon">Email</span>
+            <span className="p-inputgroup-addon">
+              <i className="pi pi-envelope"></i>
+            </span>
             <InputText
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              placeholder="Correo"
+              placeholder="Correo electronico"
             />
           </div>
 
@@ -263,13 +338,13 @@ const CreateStudent = () => {
               onChange={(e) => setSelectedState(e.value)}
               options={states}
               optionLabel="name"
-              placeholder="Select state"
+              placeholder="Estado"
               className="w-full"
             />
           </div>
 
           <div className="p-inputgroup mb-3">
-            <span className="p-inputgroup-addon">Password</span>
+            <span className="p-inputgroup-addon">Contraseña</span>
             <Password
               value={password}
               onChange={(e) => setPassword(e.target.value)}
@@ -285,7 +360,7 @@ const CreateStudent = () => {
               onChange={(e) => setSelectedRole(e.value)}
               options={role}
               optionLabel="name"
-              placeholder="Select role"
+              placeholder="Seleccione el rol"
               className="w-full"
             />
           </div>
@@ -296,7 +371,7 @@ const CreateStudent = () => {
               onChange={(e) => setSelectedProgram(e.value)}
               options={programs}
               optionLabel="name"
-              placeholder="Select program"
+              placeholder="Seleccione el programa academico"
               className="w-full"
             />
           </div>
@@ -304,8 +379,8 @@ const CreateStudent = () => {
           <div className="card mb-3">
             <Toast ref={toast}></Toast>
             <FileUpload
-              mode="basic"
               name="demo[]"
+              multiple
               accept="image/*"
               maxFileSize={1000000}
               customUpload
@@ -313,7 +388,15 @@ const CreateStudent = () => {
               onSelect={handleFileSelect}
             />
           </div>
-          <Button label="Guardar" onClick={handleSave} />
+          <div style={{ textAlign: "right" }}>
+            <Button
+              severity="success"
+              label="Guardar"
+              onClick={handleSave}
+              style={{ marginRight: "1rem" }}
+            />
+            <Button severity="warning" label="Limpiar" onClick={cleanFields} />
+          </div>
         </div>
       </div>
     </div>

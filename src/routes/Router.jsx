@@ -8,13 +8,14 @@ import Login from "../pages/Login";
 import SecondValidate from "../pages/SecondValidate";
 import SaveStudent from "../pages/SaveStudent";
 import CheckRoleAuth from "../middleware/CheckRoleAuth";
+import { Error404 } from "../pages/Error404";
 
 const Router = () => {
   return (
     <BrowserRouter>
       <Routes>
         <Route exact path="/" Component={Login} />
-        {/* <Route path="*" component={Error404} /> */}
+        <Route path="*" element={<Error404/>} />
         {/* <Route exact path="/" Component={Dashboard} /> */}
         <Route exact path="/secondValidation" Component={SecondValidate} />
         <Route exact path="/listTopic" Component={ListTopic} />
