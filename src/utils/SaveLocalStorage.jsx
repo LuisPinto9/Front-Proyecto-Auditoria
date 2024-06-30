@@ -1,14 +1,13 @@
 export const SaveLocalStorage = (key, item) => {
-  console.log(item);
-  //lementos en localStorage
+  localStorage.removeItem(key);
   let elementos = JSON.parse(localStorage.getItem(key));
-  //comprobar si es un array
-  if (Array.isArray(elementos)) {
-    elementos.push(item);
-  } else {
-    elementos = [item];
+
+  if (!Array.isArray(elementos)) {
+    elementos = [];
   }
+
+  elementos.push(item);
   localStorage.setItem(key, JSON.stringify(elementos));
- 
+
   return item;
-}; 
+};

@@ -1,19 +1,17 @@
-import React, { useState} from "react";
-import { SaveLocalStorage } from "./SaveLocalStorage"; 
+import React, { useState, useRef } from "react";
+import { SaveLocalStorage } from "../utils/SaveLocalStorage";
 import { useNavigate } from "react-router-dom";
+import { Toast } from "primereact/toast";
 
 const Login = () => {
-
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
-
-
+  const toast = useRef(null);
 
   const handleLogin = async (event) => {
     event.preventDefault();
     const loginData = { username: email, password };
-
     const response = await fetch(`${import.meta.env.VITE_API_URL}/login/`, {
       method: "POST",
       headers: {
@@ -22,22 +20,25 @@ const Login = () => {
       body: JSON.stringify(loginData),
     });
 
-
     const result = await response.json();
 
     if (result.state) {
       SaveLocalStorage("authToken", result.token);
-      SaveLocalStorage("imageURL",result.data.image)
-      console.log(result.data)
-      navigate("/secondValidation"); 
+      SaveLocalStorage("imageURL", result.data.image);
+      navigate("/secondValidation");
     } else {
-      alert("Error en el inicio de sesión: " + result.error);
+      toast.current.show({
+        severity: "error",
+        summary: "Error de inicio de sesión",
+        detail: "Revise el usuario o contraseña.",
+        life: 3000,
+      });
     }
   };
 
-
   return (
     <div className="bg-gradient-primary" style={{ height: "100vh" }}>
+      <Toast ref={toast} />
       <div className="container h-100">
         <div className="row justify-content-center align-items-center h-100">
           <div className="col-md-9 col-lg-12 col-xl-10">
@@ -48,8 +49,7 @@ const Login = () => {
                     <div
                       className="flex-grow-1 bg-login-image"
                       style={{
-                        backgroundImage: `url(${"images/dogs/image3.jpeg"
-                        })`,
+                        backgroundImage: `url(${"images/dogs/image3.jpeg"})`,
                         height: "100%",
                         width: "100%",
                       }}
@@ -60,7 +60,11 @@ const Login = () => {
                       <div className="text-center">
                         <h4 className="text-dark mb-4">Inicio de Sesión</h4>
                       </div>
-                      <form className="user" id="login-form" onSubmit={handleLogin}>
+                      <form
+                        className="user"
+                        id="login-form"
+                        onSubmit={handleLogin}
+                      >
                         <div className="mb-3">
                           <input
                             className="form-control form-control-user"
