@@ -1,4 +1,5 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
+import { useLocation } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import { ProgressSpinner } from "primereact/progressspinner";
 import Webcam from "react-webcam";
@@ -16,8 +17,12 @@ const SecondValidate = () => {
   const webcamRef = useRef(null);
   const toast = useRef(null);
   const navigate = useNavigate();
-
+  const location = useLocation();
   const trueImage = JSON.parse(localStorage.getItem("imageURL"));
+
+  useEffect(() => {
+    localStorage.removeItem("secondAccess");
+  }, [location.pathname]);
 
   const handleLogin = async () => {
     setIsLoading(true); //nicia elSpinner
@@ -67,7 +72,7 @@ const SecondValidate = () => {
         const result = JSON.parse(responseData);
         if (result.isSamePerson) {
           localStorage.removeItem("imageURL");
-          SaveLocalStorage("twoFactorAuth", encrypt("true"));
+          SaveLocalStorage("twoFactorAuth", encrypt("ValidatedAccessTrue"));
           navigate("/listStudents");
         } else {
           toast.current.show({

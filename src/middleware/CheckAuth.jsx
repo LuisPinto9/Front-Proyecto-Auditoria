@@ -21,7 +21,7 @@ const CheckAuth = ({ children, requiredType }) => {
         if (!userRole || userRole !== requiredType) {
           navigate("/");
           return;
-        } else if (!twoFactorAuth || twoFactorAuth !== "true") {
+        } else if (!twoFactorAuth || twoFactorAuth !== "ValidatedAccessTrue") {
           navigate("/secondValidation");
           return;
         }
@@ -53,4 +53,46 @@ const CheckAuth = ({ children, requiredType }) => {
   return children;
 };
 
-export default CheckAuth;
+const CheckAuthSecondValidation = ({ children }) => {
+  const [isLoading, setIsLoading] = useState(true);
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  useEffect(() => {
+    const checkAuth = async () => {
+      try {
+        const secondAccess = decrypt(
+          JSON.parse(localStorage.getItem("secondAccess"))[0]
+        );
+        if (!secondAccess || secondAccess !== "true") {
+          navigate("/");
+          return;
+        }
+        setIsLoading(false);
+      } catch (error) {
+        navigate("/");
+      }
+    };
+
+    checkAuth();
+  }, [navigate, location.pathname]);
+
+  if (isLoading) {
+    return (
+      <div
+        className="bg-gradient-primary"
+        style={{ height: "100vh", alignContent: "center" }}
+      >
+        <div className="container d-flex justify-content-center align-items-center">
+          <div className="card d-flex justify-content-center align-items-center">
+            {isLoading ? <ProgressSpinner /> : null}
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  return children;
+};
+
+export { CheckAuth, CheckAuthSecondValidation };

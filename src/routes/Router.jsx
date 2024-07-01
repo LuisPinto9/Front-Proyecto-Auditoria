@@ -7,7 +7,7 @@ import ListGroups from "../pages/ListGroups";
 import Login from "../pages/Login";
 import SecondValidate from "../pages/SecondValidate";
 import SaveStudent from "../pages/SaveStudent";
-import CheckAuth from "../middleware/CheckAuth";
+import { CheckAuth, CheckAuthSecondValidation } from "../middleware/CheckAuth";
 import { Error404 } from "../pages/Error404";
 
 const Router = () => {
@@ -15,9 +15,17 @@ const Router = () => {
     <BrowserRouter>
       <Routes>
         <Route exact path="/" Component={Login} />
-        <Route path="*" element={<Error404/>} />
+        <Route path="*" element={<Error404 />} />
         {/* <Route exact path="/" Component={Dashboard} /> */}
-        <Route exact path="/secondValidation" Component={SecondValidate} />
+        <Route
+          exact
+          path="/secondValidation"
+          element={
+            <CheckAuthSecondValidation>
+              <SecondValidate />
+            </CheckAuthSecondValidation>
+          }
+        />
         <Route exact path="/listTopic" Component={ListTopic} />
         <Route
           exact

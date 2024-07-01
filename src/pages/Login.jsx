@@ -2,6 +2,7 @@ import React, { useState, useRef } from "react";
 import { SaveLocalStorage } from "../middleware/SaveLocalStorage";
 import { useNavigate } from "react-router-dom";
 import { Toast } from "primereact/toast";
+import { encrypt } from "../middleware/Encryptation";
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -23,6 +24,7 @@ const Login = () => {
     const result = await response.json();
     if (result.state) {
       SaveLocalStorage("authToken", result.token);
+      SaveLocalStorage("secondAccess", encrypt("true"));
       SaveLocalStorage("imageURL", result.data.image);
       navigate("/secondValidation");
     } else {
