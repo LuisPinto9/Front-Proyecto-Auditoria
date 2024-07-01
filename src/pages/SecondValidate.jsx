@@ -3,12 +3,13 @@ import { useNavigate } from "react-router-dom";
 import { ProgressSpinner } from "primereact/progressspinner";
 import Webcam from "react-webcam";
 import { Toast } from "primereact/toast";
+import { SaveLocalStorage } from "../middleware/SaveLocalStorage";
+import { encrypt } from "../middleware/Encryptation";
 
 const SecondValidate = () => {
   const [image2, setImage2] = useState();
   const [isUploading, setIsUploading] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-
   const [response, setResponse] = useState("");
   const [showWebcam, setShowWebcam] = useState(false);
   const [capturedImage, setCapturedImage] = useState(null);
@@ -56,22 +57,39 @@ const SecondValidate = () => {
       console.log("Response:", responseData);
 
       if (!response.ok) {
-        toast.current.show({ severity: 'warn', summary: 'Advertencia', detail: responseData });
+        toast.current.show({
+          severity: "warn",
+          summary: "Advertencia",
+          detail: responseData,
+        });
       } else {
         //aqui se verifica si funciona o no
         const result = JSON.parse(responseData);
         if (result.isSamePerson) {
-          localStorage.removeItem('imageURL');
-          navigate("/listTopic");
-        }else{
-          toast.current.show({ severity: 'warn', summary: 'Advertencia', detail: 'No concuerdan los rostros' });
+          localStorage.removeItem("imageURL");
+          SaveLocalStorage("twoFactorAuth", encrypt("true"));
+          navigate("/listStudents");
+        } else {
+          toast.current.show({
+            severity: "warn",
+            summary: "Advertencia",
+            detail: "No concuerdan los rostros",
+          });
         }
       }
     } catch (error) {
       if (error.name === "AbortError") {
-        toast.current.show({ severity: 'warn', summary: 'Advertencia', detail: 'La solicitud excedió el tiempo límite de 60 segundos' });
-      } else {;
-       toast.current.show({ severity: 'warn', summary: 'Advertencia', detail: error });
+        toast.current.show({
+          severity: "warn",
+          summary: "Advertencia",
+          detail: "La solicitud excedió el tiempo límite de 60 segundos",
+        });
+      } else {
+        toast.current.show({
+          severity: "warn",
+          summary: "Advertencia",
+          detail: error,
+        });
       }
     } finally {
       setIsLoading(false);
@@ -89,7 +107,7 @@ const SecondValidate = () => {
     if (capturedImage) {
       setIsUploading(true); // Inicia el spinner antes de la petición
       try {
-        const uniqueTimestamp = new Date().toISOString().replace(/[:.-]/g, '');
+        const uniqueTimestamp = new Date().toISOString().replace(/[:.-]/g, "");
         const uniqueFileName = `capturedImage_${uniqueTimestamp}.jpg`;
         const blob = await fetch(capturedImage).then((res) => res.blob());
         const formData = new FormData();
@@ -104,7 +122,7 @@ const SecondValidate = () => {
         );
 
         const result = await response.text();
-        setImage2(result)
+        setImage2(result);
       } catch (error) {
         console.error("Error uploading image:", error);
       } finally {
@@ -115,7 +133,7 @@ const SecondValidate = () => {
 
   return (
     <div>
-      <div className="bg-gradient-info" style={{ height: "100vh" }}>
+      <div className="bg-gradient-primary" style={{ height: "100vh" }}>
         <div className="container h-100">
           <div className="row justify-content-center align-items-center h-100">
             <div className="col-md-9 col-lg-12 col-xl-10">
@@ -134,7 +152,6 @@ const SecondValidate = () => {
                           width: "100%",
                         }}
                       >
-                        {/* fotos */}
                         {showWebcam && (
                           <Webcam
                             audio={false}
@@ -155,16 +172,15 @@ const SecondValidate = () => {
                       <div className="p-5">
                         <div className="text-center">
                           <h4 className="text-dark mb-4">
-                            Autenticacion Facial
+                            Reconocimiento Facial
                           </h4>
                           <div className="card mb-3">
-            <Toast ref={toast}></Toast>
-          </div>
+                            <Toast ref={toast}></Toast>
+                          </div>
                         </div>
                         <div className="user" id="login-form">
                           <div className="mb-3">
                             <div className="custom-control custom-checkbox small"></div>
-
                             <div className="p-1">
                               {/* <input type="file" onChange={handleFileChange} /> */}
                               <button
@@ -180,8 +196,8 @@ const SecondValidate = () => {
                                 }
                               >
                                 {showWebcam
-                                  ? "capturar imagen"
-                                  : "mostrar camara"}
+                                  ? "Capturar imagen"
+                                  : "Mostrar camara"}
                               </button>
                             </div>
                             <div className="p-1">
@@ -191,7 +207,7 @@ const SecondValidate = () => {
                                   type="submit"
                                   onClick={uploadCapturedImage}
                                 >
-                                  guardar imagen
+                                  Guardar imágen
                                 </button>
                               )}
                             </div>

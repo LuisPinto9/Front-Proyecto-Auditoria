@@ -7,7 +7,7 @@ import ListGroups from "../pages/ListGroups";
 import Login from "../pages/Login";
 import SecondValidate from "../pages/SecondValidate";
 import SaveStudent from "../pages/SaveStudent";
-import CheckRoleAuth from "../middleware/CheckRoleAuth";
+import CheckAuth from "../middleware/CheckAuth";
 import { Error404 } from "../pages/Error404";
 
 const Router = () => {
@@ -23,9 +23,9 @@ const Router = () => {
           exact
           path="/listStudents"
           element={
-            <CheckRoleAuth requiredType="admin">
+            <CheckAuth requiredType="admin">
               <ListStudents />
-            </CheckRoleAuth>
+            </CheckAuth>
           }
         />
         <Route exact path="/listInscription" Component={ListInscription} />
