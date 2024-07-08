@@ -9,6 +9,7 @@ import SecondValidate from "../pages/SecondValidate";
 import SaveStudent from "../pages/SaveStudent";
 import { CheckAuth, CheckAuthSecondValidation } from "../middleware/CheckAuth";
 import { Error404 } from "../pages/Error404";
+import StudentInscription from "../pages/StudentInscription";
 
 const Router = () => {
   return (
@@ -16,7 +17,6 @@ const Router = () => {
       <Routes>
         <Route exact path="/" Component={Login} />
         <Route path="*" element={<Error404 />} />
-        {/* <Route exact path="/" Component={Dashboard} /> */}
         <Route
           exact
           path="/secondValidation"
@@ -31,14 +31,15 @@ const Router = () => {
           exact
           path="/listStudents"
           element={
-            <CheckAuth requiredType="admin">
+            // <CheckAuth requiredType="admin">
               <ListStudents />
-            </CheckAuth>
+            // </CheckAuth>
           }
         />
         <Route exact path="/listInscription" Component={ListInscription} />
         <Route exact path="/listGroups" Component={ListGroups} />
         <Route exact path="/saveStudent" Component={SaveStudent} />
+        <Route exact path="/studentInscription" element={<StudentInscription/>} />
       </Routes>
     </BrowserRouter>
   );
