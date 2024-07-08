@@ -24,20 +24,16 @@ const Lateral = () => {
             </Link>
           </div>
         </button>
+        
         {!isAdmin && (
           <div className="margin-right-38">
-            <button
-              className="my-custom-button btn btn-primary"
-              data-bs-toggle="collapse"
-              href="#collapse-1"
+            <Link
+              to="/studentInscription"
+              className="btn btn-primary my-custom-button text-white"
+              style={{ textDecoration: "none" }}
             >
-              <Link
-                to="/studentInscription"
-                className="text-white"
-                style={{ textDecoration: "none" }}
-              ></Link>
               <i className="pi pi-search-plus"></i>&nbsp; Inscripción
-            </button>
+            </Link>
           </div>
         )}
 

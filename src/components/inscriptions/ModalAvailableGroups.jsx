@@ -29,11 +29,13 @@ const ModalGroups = ({ groups, isLoadingModal, haveAvailableGroups }) => {
             </div>
             <div className="modal-body">
               {isLoadingModal && (
-                <div className="loading-overlay">
-                  <i
-                    className="pi pi-spin pi-spinner"
-                    style={{ fontSize: "2rem" }}
-                  ></i>
+                <div className="card-body">
+                  <div className="loading-overlay">
+                    <i
+                      className="pi pi-spin pi-spinner"
+                      style={{ fontSize: "2rem" }}
+                    ></i>
+                  </div>
                 </div>
               )}
               {!isLoadingModal && groups.length === 0 && (
