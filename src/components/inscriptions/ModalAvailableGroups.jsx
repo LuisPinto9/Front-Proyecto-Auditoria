@@ -1,8 +1,39 @@
-import React from "react";
+import axios from "axios";
+import React, { useRef } from "react";
+import { jwtDecode } from "jwt-decode";
+import { Toast } from "primereact/toast";
 
 const ModalGroups = ({ groups, isLoadingModal, haveAvailableGroups }) => {
+  const toast = useRef(null);
+
+  const createInscription = async (groupId) => {
+    const currentDate = new Date().toISOString().split("T")[0];
+    try {
+      await axios.post(`${import.meta.env.VITE_API_URL}/inscriptions/save`, {
+        student: {
+          _id: jwtDecode(JSON.parse(localStorage.getItem("authToken"))[0])
+            .objectId,
+        },
+        group: { _id: groupId },
+        registrationDate: currentDate,
+      });
+      toast.current.show({
+        severity: "success",
+        summary: "Inscripción exitosa",
+        detail: "Se ha inscrito correctamente al grupo",
+      });
+    } catch (error) {
+      toast.current.show({
+        severity: "error",
+        summary: "Error",
+        detail: "Error al inscribirse al grupo",
+      });
+    }
+  };
+
   return (
     <>
+      <Toast ref={toast} />
       <div
         className="modal fade"
         id="availableGroups"
@@ -47,18 +78,27 @@ const ModalGroups = ({ groups, isLoadingModal, haveAvailableGroups }) => {
                 <div className="table-responsive">
                   <table className="table">
                     <thead>
-                      <tr>
+                      <tr style={{ textAlign: "center" }}>
                         <th scope="col">Nombre del Grupo</th>
                         <th scope="col">Grupo</th>
                         <th scope="col">Cupos</th>
+                        <th scope="col">Inscribirse</th>
                       </tr>
                     </thead>
                     <tbody>
                       {groups.map((group) => (
-                        <tr key={group._id}>
+                        <tr key={group._id} style={{ textAlign: "center" }}>
                           <td>{group.name}</td>
                           <td>{group.grupo}</td>
                           <td>{group.quotas}</td>
+                          <td>
+                            <i
+                              className="pi pi-plus-circle"
+                              type="button"
+                              style={{ color: "blue", fontSize: "1.5rem" }}
+                              onClick={() => createInscription(group._id)}
+                            ></i>
+                          </td>
                         </tr>
                       ))}
                     </tbody>
