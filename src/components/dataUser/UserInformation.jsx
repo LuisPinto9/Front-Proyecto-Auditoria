@@ -109,36 +109,36 @@ const UserInformation = () => {
               <div className="infoUser">
                 <div>
                   <p>
-                    <strong>nombre: </strong> {userInformation.firstName}
+                    <strong>Nombre: </strong> {userInformation.firstName}
                   </p>
                   <p>
-                    <strong>apellido:</strong> {userInformation.lastName}
+                    <strong>Apellido:</strong> {userInformation.lastName}
                   </p>
                   <p>
-                    <strong>id:</strong> {userInformation.id}
+                    <strong>Id:</strong> {userInformation.id}
                   </p>
                   <p>
-                    <strong>tipo documento:</strong>{" "}
+                    <strong>Tipo documento:</strong>{" "}
                     {userInformation.documentType}
                   </p>
                   <p>
-                    <strong>identificacion:</strong>{" "}
+                    <strong>Identificación:</strong>{" "}
                     {userInformation.Identification}
                   </p>
                 </div>
                 <div>
                   <p>
-                    <strong>codigo:</strong> {userInformation.code}
+                    <strong>Código:</strong> {userInformation.code}
                   </p>
                   <p>
-                    <strong>fecha de nacimiento:</strong>{" "}
+                    <strong>Fecha de nacimiento:</strong>{" "}
                     {userInformation.birthdate}
                   </p>
                   <p>
-                    <strong>celular:</strong> {userInformation.cellphone}
+                    <strong>Celular:</strong> {userInformation.cellphone}
                   </p>
                   <p>
-                    <strong>email:</strong> {userInformation.email}
+                    <strong>Email:</strong> {userInformation.email}
                   </p>
                 </div>
               </div>
@@ -147,33 +147,33 @@ const UserInformation = () => {
               <div className="infoUser">
                 <div>
                   <p>
-                    <strong>nombre Programa:</strong> {userAcademic.name}
+                    <strong>Nombre Programa:</strong> {userAcademic.name}
                   </p>
                   <p>
-                    <strong>nivel:</strong> {userAcademic.level}
+                    <strong>Nivel:</strong> {userAcademic.level}
                   </p>
                   <p>
-                    <strong>codigo snies:</strong> {userAcademic.snies_code}
+                    <strong>Código SNIES:</strong> {userAcademic.snies_code}
                   </p>
                   <p>
-                    <strong>modalidad:</strong> {userAcademic.modality}
+                    <strong>Modalidad:</strong> {userAcademic.modality}
                   </p>
                   <p>
-                    <strong>localizacion:</strong> {userAcademic.location}
+                    <strong>Localización:</strong> {userAcademic.location}
                   </p>
                 </div>
                 <div>
                   <p>
-                    <strong>facultad:</strong> {userFacultad.name}
+                    <strong>Facultad:</strong> {userFacultad.name}
                   </p>
                   <p>
-                    <strong>ubicacion:</strong> {userFacultad.ubication}
+                    <strong>Ubicación:</strong> {userFacultad.ubication}
                   </p>
                   <p>
-                    <strong>telefono:</strong> {userFacultad.phone}
+                    <strong>Telefono:</strong> {userFacultad.phone}
                   </p>
                   <p>
-                    <strong>email:</strong> {userFacultad.email}
+                    <strong>Email:</strong> {userFacultad.email}
                   </p>
                 </div>
               </div>
