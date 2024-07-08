@@ -61,6 +61,18 @@ const Lateral = () => {
                 <i className="far fa-user"></i>&nbsp; Estudiantes
               </button>
               <div className="collapse ms-4" id="collapse-1">
+              <div>
+                  <button className="my-custom-button text-white">
+                    <Link
+                      to="/userInformation"
+                      className="text-white"
+                      style={{ textDecoration: "none" }}
+                    >
+                      <i className="pi pi-user"></i> Informacion
+                    </Link>
+                  </button>
+                </div>
+
                 <div>
                   <button className="my-custom-button text-white">
                     <Link

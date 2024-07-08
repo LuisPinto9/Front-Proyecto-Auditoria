@@ -108,34 +108,73 @@ const UserInformation = () => {
             <Fieldset legend="Información Básica" toggleable>
               <div className="infoUser">
                 <div>
-                  <p><strong>nombre: </strong>  {userInformation.firstName}</p>
-                  <p><strong>apellido:</strong>  {userInformation.lastName}</p>
-                  <p><strong>id:</strong>  {userInformation.id}</p>
-                  <p><strong>tipo documento:</strong>  {userInformation.documentType}</p>
-                  <p><strong>identificacion:</strong>  {userInformation.Identification}</p>
+                  <p>
+                    <strong>nombre: </strong> {userInformation.firstName}
+                  </p>
+                  <p>
+                    <strong>apellido:</strong> {userInformation.lastName}
+                  </p>
+                  <p>
+                    <strong>id:</strong> {userInformation.id}
+                  </p>
+                  <p>
+                    <strong>tipo documento:</strong>{" "}
+                    {userInformation.documentType}
+                  </p>
+                  <p>
+                    <strong>identificacion:</strong>{" "}
+                    {userInformation.Identification}
+                  </p>
                 </div>
                 <div>
-                  <p><strong>codigo:</strong>  {userInformation.code}</p>
-                  <p><strong>fecha de nacimiento:</strong>  {userInformation.birthdate}</p>
-                  <p><strong>celular:</strong>  {userInformation.cellphone}</p>
-                  <p><strong>email:</strong> {userInformation.email}</p>
+                  <p>
+                    <strong>codigo:</strong> {userInformation.code}
+                  </p>
+                  <p>
+                    <strong>fecha de nacimiento:</strong>{" "}
+                    {userInformation.birthdate}
+                  </p>
+                  <p>
+                    <strong>celular:</strong> {userInformation.cellphone}
+                  </p>
+                  <p>
+                    <strong>email:</strong> {userInformation.email}
+                  </p>
                 </div>
               </div>
             </Fieldset>
             <Fieldset legend="Datos del programa" toggleable>
-              <div  className="infoUser">
+              <div className="infoUser">
                 <div>
-                  <p><strong>nombre Programa:</strong>  {userAcademic.name}</p>
-                  <p><strong>nivel:</strong> {userAcademic.level}</p>
-                  <p><strong>codigo snies:</strong> {userAcademic.snies_code}</p>
-                  <p><strong>modalidad:</strong>  {userAcademic.modality}</p>
-                  <p><strong>localizacion:</strong>  {userAcademic.location}</p>
+                  <p>
+                    <strong>nombre Programa:</strong> {userAcademic.name}
+                  </p>
+                  <p>
+                    <strong>nivel:</strong> {userAcademic.level}
+                  </p>
+                  <p>
+                    <strong>codigo snies:</strong> {userAcademic.snies_code}
+                  </p>
+                  <p>
+                    <strong>modalidad:</strong> {userAcademic.modality}
+                  </p>
+                  <p>
+                    <strong>localizacion:</strong> {userAcademic.location}
+                  </p>
                 </div>
                 <div>
-                  <p><strong>facultad:</strong>  {userFacultad.name}</p>
-                  <p><strong>ubicacion:</strong>  {userFacultad.ubication}</p>
-                  <p><strong>telefono:</strong>  {userFacultad.phone}</p>
-                  <p><strong>email:</strong>  {userFacultad.email}</p>
+                  <p>
+                    <strong>facultad:</strong> {userFacultad.name}
+                  </p>
+                  <p>
+                    <strong>ubicacion:</strong> {userFacultad.ubication}
+                  </p>
+                  <p>
+                    <strong>telefono:</strong> {userFacultad.phone}
+                  </p>
+                  <p>
+                    <strong>email:</strong> {userFacultad.email}
+                  </p>
                 </div>
               </div>
             </Fieldset>
