@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { jwtDecode } from "jwt-decode";
 
 const Lateral = () => {
-  const token = localStorage.getItem("token");
+  const token = JSON.parse(localStorage.getItem("authToken"))[0];
   const decodedToken = token ? jwtDecode(token) : null;
   const isAdmin = decodedToken && decodedToken.role === "admin";
 

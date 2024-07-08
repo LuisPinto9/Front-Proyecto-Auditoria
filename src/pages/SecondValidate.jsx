@@ -6,6 +6,7 @@ import Webcam from "react-webcam";
 import { Toast } from "primereact/toast";
 import { SaveLocalStorage } from "../middleware/SaveLocalStorage";
 import { encrypt } from "../middleware/Encryptation";
+import { jwtDecode } from "jwt-decode";
 
 const SecondValidate = () => {
   const [image2, setImage2] = useState();
@@ -73,7 +74,11 @@ const SecondValidate = () => {
         if (result.isSamePerson) {
           localStorage.removeItem("imageURL");
           SaveLocalStorage("twoFactorAuth", encrypt("ValidatedAccessTrue"));
-          navigate("/listStudents");
+
+          jwtDecode(JSON.parse(localStorage.getItem("authToken"))[0]).role ==
+          estudent
+            ? navigate("/studentInscription")
+            : navigate("/listStudents");
         } else {
           toast.current.show({
             severity: "warn",
