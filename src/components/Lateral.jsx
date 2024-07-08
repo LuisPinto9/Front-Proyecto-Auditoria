@@ -26,7 +26,8 @@ const Lateral = () => {
         </button>
         
         {!isAdmin && (
-          <div className="margin-right-38">
+          <div>
+            <div className="margin-right-38">
             <Link
               to="/studentInscription"
               className="btn btn-primary my-custom-button text-white"
@@ -35,6 +36,18 @@ const Lateral = () => {
               <i className="pi pi-search-plus"></i>&nbsp; Inscripción
             </Link>
           </div>
+
+          <div className="margin-right-38">
+            <Link
+              to="/TopicInscription"
+              className="btn btn-primary my-custom-button text-white"
+              style={{ textDecoration: "none" }}
+            >
+              <i className="pi pi-search-plus"></i>&nbsp; materias inscritas
+            </Link>
+          </div>
+          </div>
+          
         )}
 
         {isAdmin && (

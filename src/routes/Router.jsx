@@ -10,6 +10,7 @@ import SaveStudent from "../pages/SaveStudent";
 import { CheckAuth, CheckAuthSecondValidation } from "../middleware/CheckAuth";
 import { Error404 } from "../pages/Error404";
 import StudentInscription from "../pages/StudentInscription";
+import TopicInscription from "../pages/TopicInscription";
 import DataUser from "../pages/DataUser";
 
 const Router = () => {
@@ -42,6 +43,7 @@ const Router = () => {
         <Route exact path="/saveStudent" Component={SaveStudent} />
         <Route exact path="/studentInscription" element={<StudentInscription/>} />
         <Route exact path="/userInformation" element={<DataUser/>} />
+        <Route exact path="/TopicInscription" element={<TopicInscription/>} />
       </Routes>
     </BrowserRouter>
   );
