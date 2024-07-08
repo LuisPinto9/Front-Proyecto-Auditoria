@@ -13,6 +13,8 @@ const Table = () => {
   const [sortDirection, setSortDirection] = useState("");
   const [totalRecords, setTotalRecords] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
+  const [isLoadingModal, setIsLoadingModal] = useState(false);
+  const [haveAvailableGroups, setHaveAvailableGroups] = useState(false);
   const [groups, setGroups] = useState([]);
   const toast = useRef(null);
 
@@ -98,6 +100,7 @@ const Table = () => {
   };
 
   const findStudentInscriptions = async (studentId) => {
+    setIsLoadingModal(true);
     setGroups([]);
     try {
       const response = await axios.get(
@@ -108,22 +111,20 @@ const Table = () => {
 
       const inscriptionsData = response.data.data;
 
-      const groupsData = inscriptionsData.map((inscription) => ({
-        _id: inscription.group._id,
-        name: inscription.group.name,
-        grupo: inscription.group.grupo,
-        quotas: inscription.group.quotas,
-      }));
-
-      setGroups(groupsData);
-    } catch (error) {
-      toast.current.show({
-        severity: "error",
-        summary: "Inscripciones no encontradas",
-        detail: "El estudiante no tiene inscripciones registradas.",
-        life: 3000,
-      });
-    }
+      if (inscriptionsData.length !== 0) {
+        setHaveAvailableGroups(true);
+        const groupsData = inscriptionsData.map((inscription) => ({
+          _id: inscription.group._id,
+          name: inscription.group.name,
+          grupo: inscription.group.grupo,
+          quotas: inscription.group.quotas,
+        }));
+        setGroups(groupsData);
+      } else {
+        setHaveAvailableGroups(false);
+      }
+    } catch (error) {}
+    setIsLoadingModal(false);
   };
 
   const handlePageSizeChange = (event) => {
@@ -269,7 +270,11 @@ const Table = () => {
               </table>
             </div>
           </div>
-          <ModalStudentInscriptions groups={groups} />
+          <ModalStudentInscriptions
+            groups={groups}
+            isLoadingModal={isLoadingModal}
+            haveAvailableGroups={haveAvailableGroups}
+          />
           <InfoPagination
             totalRecords={totalRecords}
             pageSize={pageSize}

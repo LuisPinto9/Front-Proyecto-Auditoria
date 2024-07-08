@@ -11,6 +11,8 @@ function StudentInscription() {
   const [data, setData] = useState([]);
   const [groups, setGroups] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [isLoadingModal, setIsLoadingModal] = useState(false);
+  const [haveAvailableGroups, setHaveAvailableGroups] = useState(false);
   const token = JSON.parse(localStorage.getItem("authToken"))[0];
   const decodedToken = token ? jwtDecode(token) : null;
 
@@ -36,20 +38,20 @@ function StudentInscription() {
   };
 
   const findGroups = async (topicId) => {
+    setIsLoadingModal(true);
     setGroups([]);
     try {
       const response = await axios.get(
         `${import.meta.env.VITE_API_URL}/topics/groups/${topicId}`
       );
-      setGroups(response.data.data);
-    } catch (error) {
-      toast.current.show({
-        severity: "error",
-        summary: "Grupos no encontrados",
-        detail: "La materia no tiene grupos registrados.",
-        life: 3000,
-      });
-    }
+      if (response.data.data.length === 0) {
+        setHaveAvailableGroups(false);
+      } else {
+        setHaveAvailableGroups(true);
+        setGroups(response.data.data);
+      }
+    } catch (error) {}
+    setIsLoadingModal(false);
   };
 
   return (
@@ -95,7 +97,7 @@ function StudentInscription() {
                       <table className="table my-0 text-center" id="dataTable">
                         <thead>
                           <tr>
-                            <th>Grupos</th>
+                            <th>Grupos Disponibles</th>
                             <th>Nombre</th>
                             <th>Aula</th>
                             <th>Creditos</th>
@@ -112,7 +114,7 @@ function StudentInscription() {
                                   data-bs-target="#availableGroups"
                                   aria-label="Ver grupos"
                                   onClick={() => findGroups(topic._id)}
-                                  className="pi pi-angle-right btn"
+                                  className="pi pi-search btn"
                                   style={{
                                     border: "none",
                                     padding: 0,
@@ -130,7 +132,11 @@ function StudentInscription() {
                     </div>
                   )}
                 </div>
-                <ModalGroups groups={groups} />
+                <ModalGroups
+                  groups={groups}
+                  isLoadingModal={isLoadingModal}
+                  haveAvailableGroups={haveAvailableGroups}
+                />
               </div>
             </div>
           </div>

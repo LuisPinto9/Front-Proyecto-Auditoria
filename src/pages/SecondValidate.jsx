@@ -76,7 +76,7 @@ const SecondValidate = () => {
           SaveLocalStorage("twoFactorAuth", encrypt("ValidatedAccessTrue"));
 
           jwtDecode(JSON.parse(localStorage.getItem("authToken"))[0]).role ==
-          estudent
+          "student"
             ? navigate("/studentInscription")
             : navigate("/listStudents");
         } else {
