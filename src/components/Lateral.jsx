@@ -43,7 +43,7 @@ const Lateral = () => {
                 className="btn btn-primary my-custom-button text-white"
                 style={{ textDecoration: "none" }}
               >
-                <i className="pi pi-search-plus"></i>&nbsp; Inscripción
+                <i className="pi pi-search-plus"></i>&nbsp; Inscribir Materias
               </Link>
             </div>
 
@@ -53,7 +53,7 @@ const Lateral = () => {
                 className="btn btn-primary my-custom-button text-white"
                 style={{ textDecoration: "none" }}
               >
-                <i className="pi pi-search-plus"></i>&nbsp; Materias inscritas
+                <i className="pi pi-book"></i>&nbsp; Materias Inscritas
               </Link>
             </div>
           </div>

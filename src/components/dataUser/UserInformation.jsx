@@ -132,7 +132,10 @@ const UserInformation = () => {
                   </p>
                   <p>
                     <strong>Fecha de nacimiento:</strong>{" "}
-                    {userInformation.birthdate}
+                    {new Date(userInformation.birthdate).toLocaleDateString(
+                      "es-ES",
+                      { day: "numeric", month: "numeric", year: "numeric" }
+                    )}
                   </p>
                   <p>
                     <strong>Celular:</strong> {userInformation.cellphone}
