@@ -25,8 +25,7 @@ const SecondValidate = () => {
     localStorage.removeItem("secondAccess");
   }, [location.pathname]);
 
-  const handleLogin = async () => {
-    setIsLoading(true); //nicia elSpinner
+  const handleLogin = async () => { 
     const loginData = {
       imageUrl1: trueImage[0],
       imageUrl2: image2,
@@ -115,6 +114,7 @@ const SecondValidate = () => {
   };
 
   const uploadCapturedImage = async () => {
+    setIsLoading(true);
     setImage2("");
     setIsUploading(true);
     if (capturedImage) {
