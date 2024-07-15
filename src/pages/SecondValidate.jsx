@@ -77,7 +77,7 @@ const SecondValidate = () => {
 
           jwtDecode(JSON.parse(localStorage.getItem("authToken"))[0]).role ==
           "student"
-            ? navigate("/studentInscription")
+            ? navigate("/userInformation")
             : navigate("/listStudents");
         } else {
           toast.current.show({

@@ -3,7 +3,12 @@ import React, { useRef } from "react";
 import { jwtDecode } from "jwt-decode";
 import { Toast } from "primereact/toast";
 
-const ModalGroups = ({ groups, isLoadingModal, haveAvailableGroups }) => {
+const ModalGroups = ({
+  groups,
+  isLoadingModal,
+  haveAvailableGroups,
+  studentGroups,
+}) => {
   const toast = useRef(null);
 
   const createInscription = async (groupId) => {
@@ -29,6 +34,13 @@ const ModalGroups = ({ groups, isLoadingModal, haveAvailableGroups }) => {
         detail: "Error al inscribirse al grupo",
       });
     }
+  };
+
+  const isStudentInGroup = (groupId) => {
+    return studentGroups.some(
+      (inscription) =>
+        inscription.group._id === groupId || inscription.group.topic
+    );
   };
 
   return (
@@ -95,8 +107,20 @@ const ModalGroups = ({ groups, isLoadingModal, haveAvailableGroups }) => {
                             <i
                               className="pi pi-plus-circle"
                               type="button"
-                              style={{ color: "blue", fontSize: "1.5rem" }}
-                              onClick={() => createInscription(group._id)}
+                              style={{
+                                color: isStudentInGroup(group._id)
+                                  ? "gray"
+                                  : "blue",
+                                fontSize: "1.5rem",
+                                cursor: isStudentInGroup(group._id)
+                                  ? "not-allowed"
+                                  : "pointer",
+                              }}
+                              onClick={() =>
+                                !isStudentInGroup(group._id) &&
+                                createInscription(group._id)
+                              }
+                              disabled={isStudentInGroup(group._id)}
                             ></i>
                           </td>
                         </tr>
