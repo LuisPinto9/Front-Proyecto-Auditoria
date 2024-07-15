@@ -3,14 +3,17 @@ import { SaveLocalStorage } from "../middleware/SaveLocalStorage";
 import { useNavigate } from "react-router-dom";
 import { Toast } from "primereact/toast";
 import { encrypt } from "../middleware/Encryptation";
+import { ProgressSpinner } from "primereact/progressspinner";
 
 const Login = () => {
   const [email, setEmail] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
   const toast = useRef(null);
 
   const handleLogin = async (event) => {
+    setIsLoading(true);
     event.preventDefault();
     const loginData = { username: email, password };
     const response = await fetch(`${import.meta.env.VITE_API_URL}/login/`, {
@@ -35,6 +38,7 @@ const Login = () => {
         life: 3000,
       });
     }
+    setIsLoading(false);
   };
 
   return (
@@ -45,6 +49,11 @@ const Login = () => {
           <div className="col-md-9 col-lg-12 col-xl-10">
             <div className="card shadow-lg o-hidden border-0 my-5">
               <div className="card-body p-0">
+                {isLoading && (
+                  <div className="loading-overlay">
+                    <ProgressSpinner />
+                  </div>
+                )}
                 <div className="row">
                   <div className="col-lg-6 d-none d-lg-flex">
                     <div

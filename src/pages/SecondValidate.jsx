@@ -9,7 +9,7 @@ import { encrypt } from "../middleware/Encryptation";
 import { jwtDecode } from "jwt-decode";
 
 const SecondValidate = () => {
-  const [image2, setImage2] = useState();
+  const [image2, setImage2] = useState("");
   const [isUploading, setIsUploading] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [response, setResponse] = useState("");
@@ -106,6 +106,7 @@ const SecondValidate = () => {
       clearTimeout(timeoutId);
     }
   };
+
   const captureImage = () => {
     const imageSrc = webcamRef.current.getScreenshot();
     setCapturedImage(imageSrc);
@@ -114,8 +115,9 @@ const SecondValidate = () => {
   };
 
   const uploadCapturedImage = async () => {
+    setImage2("");
+    setIsUploading(true);
     if (capturedImage) {
-      setIsUploading(true); // Inicia el spinner antes de la petición
       try {
         const uniqueTimestamp = new Date().toISOString().replace(/[:.-]/g, "");
         const uniqueFileName = `capturedImage_${uniqueTimestamp}.jpg`;
@@ -146,97 +148,82 @@ const SecondValidate = () => {
       <div className="bg-gradient-primary" style={{ height: "100vh" }}>
         <div className="container h-100">
           <div className="row justify-content-center align-items-center h-100">
-            <div className="col-md-9 col-lg-12 col-xl-10">
-              <div className="card shadow-lg o-hidden border-0 my-5">
+            <div className="col-12 col-lg-6 order-1 order-lg-1 mb-3">
+              <div
+                className="bg-login-image"
+                style={{
+                  backgroundImage: `url(${
+                    response ? response : "images/dogs/image3.jpeg"
+                  })`,
+                  position: "relative",
+                  height: "300px",
+                  width: "100%",
+                  borderRadius: "10px",
+                }}
+              >
+                {showWebcam && (
+                  <Webcam
+                    audio={false}
+                    ref={webcamRef}
+                    screenshotFormat="image/jpeg"
+                    style={{
+                      width: "100%",
+                      height: "100%",
+                      position: "absolute",
+                      top: 0,
+                      left: 0,
+                      zIndex: 1,
+                      borderRadius: "10px",
+                    }}
+                  />
+                )}
+              </div>
+            </div>
+            <div className="col-12 col-lg-6 order-2 order-lg-1">
+              <div className="card shadow-lg o-hidden border-0 my-3">
                 <div className="card-body p-0">
-                  <div className="row">
-                    <div className="col-lg-6 d-none d-lg-flex">
-                      <div
-                        className="flex-grow-1 bg-login-image"
-                        style={{
-                          backgroundImage: `url(${
-                            response ? response : "images/dogs/image3.jpeg"
-                          })`,
-                          position: "relative",
-                          height: "100%",
-                          width: "100%",
-                        }}
-                      >
-                        {showWebcam && (
-                          <Webcam
-                            audio={false}
-                            ref={webcamRef}
-                            screenshotFormat="image/jpeg"
-                            style={{
-                              position: "absolute",
-                              top: 0,
-                              left: 20,
-                              height: "100%",
-                              width: "100%",
-                            }}
-                          />
-                        )}
+                  <div className="p-5">
+                    <div className="text-center">
+                      <h4 className="text-dark mb-4">Reconocimiento Facial</h4>
+                      <div className="card mb-3">
+                        <Toast ref={toast}></Toast>
                       </div>
                     </div>
-                    <div className="col-lg-6">
-                      <div className="p-5">
-                        <div className="text-center">
-                          <h4 className="text-dark mb-4">
-                            Reconocimiento Facial
-                          </h4>
-                          <div className="card mb-3">
-                            <Toast ref={toast}></Toast>
-                          </div>
-                        </div>
-                        <div className="user" id="login-form">
-                          <div className="mb-3">
-                            <div className="custom-control custom-checkbox small"></div>
-                            <div className="p-1">
-                              {/* <input type="file" onChange={handleFileChange} /> */}
-                              <button
-                                className="btn btn-success d-block btn-user w-100"
-                                type="submit"
-                                onClick={
-                                  showWebcam
-                                    ? captureImage
-                                    : () => {
-                                        setShowWebcam(true);
-                                        setResponse("images/dogs/blanco.jpeg");
-                                      }
+                    <div className="user" id="login-form">
+                      <div className="mb-3">
+                        <div className="custom-control custom-checkbox small"></div>
+
+                        <button
+                          className="btn btn-success d-block btn-user w-100 mb-3"
+                          type="submit"
+                          onClick={
+                            showWebcam
+                              ? captureImage
+                              : () => {
+                                  setShowWebcam(true);
+                                  setResponse("images/dogs/blanco.jpeg");
                                 }
-                              >
-                                {showWebcam
-                                  ? "Capturar imagen"
-                                  : "Mostrar camara"}
-                              </button>
-                            </div>
-                            <div className="p-1">
-                              {capturedImage && (
-                                <button
-                                  className="btn btn-info d-block btn-user w-100"
-                                  type="submit"
-                                  onClick={uploadCapturedImage}
-                                >
-                                  Guardar imágen
-                                </button>
-                              )}
-                            </div>
-
-                            <div className="card flex justify-content-center">
-                              {isUploading ? <ProgressSpinner /> : null}
-                            </div>
-
-                            <button
-                              className="btn btn-primary d-block btn-user w-100 butonFacial"
-                              onClick={handleLogin}
-                            >
-                              Iniciar Sesión
-                            </button>
-
-                            <div className="card flex justify-content-center">
-                              {isLoading ? <ProgressSpinner /> : null}
-                            </div>
-                          </div>
+                          }
+                        >
+                          {showWebcam
+                            ? "Capturar imagen"
+                            : capturedImage
+                            ? "Reemplazar imagen"
+                            : "Mostrar camara"}
+                        </button>
+                        <button
+                          className="btn btn-primary d-block btn-user w-100 butonFacial"
+                          onClick={async () => {
+                            await uploadCapturedImage();
+                            !isUploading && image2 !== ""
+                              ? handleLogin()
+                              : null;
+                          }}
+                        >
+                          Iniciar Sesión
+                        </button>
+                        <div className="card flex justify-content-center">
+                          {isLoading ? <ProgressSpinner /> : null}
                         </div>
                       </div>
                     </div>
