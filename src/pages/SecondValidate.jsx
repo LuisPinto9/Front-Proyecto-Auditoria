@@ -25,7 +25,7 @@ const SecondValidate = () => {
     localStorage.removeItem("secondAccess");
   }, [location.pathname]);
 
-  const handleLogin = async () => { 
+  const handleLogin = async () => {
     const loginData = {
       imageUrl1: trueImage[0],
       imageUrl2: image2,
