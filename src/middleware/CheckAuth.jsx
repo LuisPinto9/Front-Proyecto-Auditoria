@@ -22,7 +22,7 @@ const CheckAuth = ({ children, requiredType }) => {
           navigate("/");
           return;
         } else if (!twoFactorAuth || twoFactorAuth !== "ValidatedAccessTrue") {
-          navigate("/secondValidation");
+          navigate("/");
           return;
         }
 
