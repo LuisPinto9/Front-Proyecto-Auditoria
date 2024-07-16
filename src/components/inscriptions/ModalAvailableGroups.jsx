@@ -22,7 +22,7 @@ const ModalGroups = ({
   const createInscription = async (groupId) => {
     const currentDate = new Date().toISOString().split("T")[0];
     try {
-      await axios.post(`http://localhost:4000/inscriptions/save`, {
+      await axios.post(`${import.meta.env.VITE_API_URL}/inscriptions/save`, {
         student: {
           _id: jwtDecode(JSON.parse(localStorage.getItem("authToken"))[0])
             .objectId,
