@@ -9,7 +9,6 @@ import { encrypt } from "../middleware/Encryptation";
 import { jwtDecode } from "jwt-decode";
 
 const SecondValidate = () => {
-  const [image2, setImage2] = useState("");
   const [isUploading, setIsUploading] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [response, setResponse] = useState("");
@@ -28,87 +27,99 @@ const SecondValidate = () => {
   const handleLogin = async () => {
     setIsLoading(true);
 
-    await uploadCapturedImage();
+    const image2 = await uploadCapturedImage();
 
-    if (!isUploading && image2 !== "") {
-      const loginData = {
-        imageUrl1: trueImage[0],
-        imageUrl2: image2,
-      };
+    // Esperar hasta que isUploading sea false
+    while (isUploading) {
+      await new Promise((resolve) => setTimeout(resolve, 100));
+    }
 
-      const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 60000); // 60 segundos
+    if (!image2) {
+      toast.current.show({
+        severity: "warn",
+        summary: "Advertencia",
+        detail: "Error al subir la imagen",
+      });
+      setIsLoading(false);
+      return;
+    }
 
-      try {
-        const startTime = Date.now();
+    const loginData = {
+      imageUrl1: trueImage[0],
+      imageUrl2: image2,
+    };
 
-        const response = await fetch(
-          "https://face-match-lxpiymvlcq-uc.a.run.app/face/compare",
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify(loginData),
-            signal: controller.signal,
-          }
-        );
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 60000); // 60 segundos
 
-        const endTime = Date.now();
-        console.log(`Respuesta recibida en ${endTime - startTime} ms`);
+    try {
+      const startTime = Date.now();
 
-        clearTimeout(timeoutId);
-
-        console.log("Status:", response.status);
-        console.log("StatusText:", response.statusText);
-        console.log("Headers:", Object.fromEntries(response.headers.entries()));
-
-        const responseData = await response.text();
-        console.log("Response:", responseData);
-
-        if (!response.ok) {
-          toast.current.show({
-            severity: "warn",
-            summary: "Advertencia",
-            detail: responseData,
-          });
-        } else {
-          //aqui se verifica si funciona o no
-          const result = JSON.parse(responseData);
-          if (result.isSamePerson) {
-            localStorage.removeItem("imageURL");
-            SaveLocalStorage("twoFactorAuth", encrypt("ValidatedAccessTrue"));
-
-            jwtDecode(JSON.parse(localStorage.getItem("authToken"))[0]).role ==
-            "student"
-              ? navigate("/userInformation")
-              : navigate("/listStudents");
-          } else {
-            toast.current.show({
-              severity: "warn",
-              summary: "Advertencia",
-              detail: "No concuerdan los rostros",
-            });
-          }
+      const response = await fetch(
+        "https://face-match-lxpiymvlcq-uc.a.run.app/face/compare",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(loginData),
+          signal: controller.signal,
         }
-      } catch (error) {
-        if (error.name === "AbortError") {
-          toast.current.show({
-            severity: "warn",
-            summary: "Advertencia",
-            detail: "La solicitud excedió el tiempo límite de 60 segundos",
-          });
+      );
+
+      const endTime = Date.now();
+      console.log(`Respuesta recibida en ${endTime - startTime} ms`);
+
+      clearTimeout(timeoutId);
+
+      console.log("Status:", response.status);
+      console.log("StatusText:", response.statusText);
+      console.log("Headers:", Object.fromEntries(response.headers.entries()));
+
+      const responseData = await response.text();
+      console.log("Response:", responseData);
+
+      if (!response.ok) {
+        toast.current.show({
+          severity: "warn",
+          summary: "Advertencia",
+          detail: responseData,
+        });
+      } else {
+        const result = JSON.parse(responseData);
+        if (result.isSamePerson) {
+          localStorage.removeItem("imageURL");
+          SaveLocalStorage("twoFactorAuth", encrypt("ValidatedAccessTrue"));
+
+          jwtDecode(JSON.parse(localStorage.getItem("authToken"))[0]).role ==
+          "student"
+            ? navigate("/userInformation")
+            : navigate("/listStudents");
         } else {
           toast.current.show({
             severity: "warn",
             summary: "Advertencia",
-            detail: error,
+            detail: "No concuerdan los rostros",
           });
         }
-      } finally {
-        setIsLoading(false);
-        clearTimeout(timeoutId);
       }
+    } catch (error) {
+      if (error.name === "AbortError") {
+        toast.current.show({
+          severity: "warn",
+          summary: "Advertencia",
+          detail: "La solicitud excedió el tiempo límite de 60 segundos",
+        });
+      } else {
+        toast.current.show({
+          severity: "warn",
+          summary: "Advertencia",
+          detail: error,
+        });
+      }
+    } finally {
+      setIsLoading(false);
+      clearTimeout(timeoutId);
     }
   };
 
@@ -120,13 +131,25 @@ const SecondValidate = () => {
   };
 
   const uploadCapturedImage = async () => {
-    setImage2("");
     setIsUploading(true);
+
     if (capturedImage) {
       try {
         const uniqueTimestamp = new Date().toISOString().replace(/[:.-]/g, "");
-        const uniqueFileName = `capturedImage_${uniqueTimestamp}.jpg`;
+
         const blob = await fetch(capturedImage).then((res) => res.blob());
+        const fileType = blob.type;
+        let fileExtension = "";
+
+        if (fileType === "image/jpeg") {
+          fileExtension = "jpg";
+        } else if (fileType === "image/png") {
+          fileExtension = "png";
+        } else {
+          throw new Error("Unsupported image format");
+        }
+
+        const uniqueFileName = `capturedImage_${uniqueTimestamp}.${fileExtension}`;
         const formData = new FormData();
         formData.append("file", blob, uniqueFileName);
 
@@ -138,12 +161,11 @@ const SecondValidate = () => {
           }
         );
 
-        const result = await response.text();
-        setImage2(result);
+        return await response.text();
       } catch (error) {
         console.error("Error uploading image:", error);
       } finally {
-        setIsUploading(false); // Detiene el spinner después de la petición
+        setIsUploading(false);
       }
     }
   };
