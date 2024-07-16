@@ -26,83 +26,89 @@ const SecondValidate = () => {
   }, [location.pathname]);
 
   const handleLogin = async () => {
-    const loginData = {
-      imageUrl1: trueImage[0],
-      imageUrl2: image2,
-    };
+    setIsLoading(true);
 
-    const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 60000); // 60 segundos
+    await uploadCapturedImage();
 
-    try {
-      const startTime = Date.now();
+    if (!isUploading && image2 !== "") {
+      const loginData = {
+        imageUrl1: trueImage[0],
+        imageUrl2: image2,
+      };
 
-      const response = await fetch(
-        "https://face-match-lxpiymvlcq-uc.a.run.app/face/compare",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(loginData),
-          signal: controller.signal,
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 60000); // 60 segundos
+
+      try {
+        const startTime = Date.now();
+
+        const response = await fetch(
+          "https://face-match-lxpiymvlcq-uc.a.run.app/face/compare",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(loginData),
+            signal: controller.signal,
+          }
+        );
+
+        const endTime = Date.now();
+        console.log(`Respuesta recibida en ${endTime - startTime} ms`);
+
+        clearTimeout(timeoutId);
+
+        console.log("Status:", response.status);
+        console.log("StatusText:", response.statusText);
+        console.log("Headers:", Object.fromEntries(response.headers.entries()));
+
+        const responseData = await response.text();
+        console.log("Response:", responseData);
+
+        if (!response.ok) {
+          toast.current.show({
+            severity: "warn",
+            summary: "Advertencia",
+            detail: responseData,
+          });
+        } else {
+          //aqui se verifica si funciona o no
+          const result = JSON.parse(responseData);
+          if (result.isSamePerson) {
+            localStorage.removeItem("imageURL");
+            SaveLocalStorage("twoFactorAuth", encrypt("ValidatedAccessTrue"));
+
+            jwtDecode(JSON.parse(localStorage.getItem("authToken"))[0]).role ==
+            "student"
+              ? navigate("/userInformation")
+              : navigate("/listStudents");
+          } else {
+            toast.current.show({
+              severity: "warn",
+              summary: "Advertencia",
+              detail: "No concuerdan los rostros",
+            });
+          }
         }
-      );
-
-      const endTime = Date.now();
-      console.log(`Respuesta recibida en ${endTime - startTime} ms`);
-
-      clearTimeout(timeoutId);
-
-      console.log("Status:", response.status);
-      console.log("StatusText:", response.statusText);
-      console.log("Headers:", Object.fromEntries(response.headers.entries()));
-
-      const responseData = await response.text();
-      console.log("Response:", responseData);
-
-      if (!response.ok) {
-        toast.current.show({
-          severity: "warn",
-          summary: "Advertencia",
-          detail: responseData,
-        });
-      } else {
-        //aqui se verifica si funciona o no
-        const result = JSON.parse(responseData);
-        if (result.isSamePerson) {
-          localStorage.removeItem("imageURL");
-          SaveLocalStorage("twoFactorAuth", encrypt("ValidatedAccessTrue"));
-
-          jwtDecode(JSON.parse(localStorage.getItem("authToken"))[0]).role ==
-          "student"
-            ? navigate("/userInformation")
-            : navigate("/listStudents");
+      } catch (error) {
+        if (error.name === "AbortError") {
+          toast.current.show({
+            severity: "warn",
+            summary: "Advertencia",
+            detail: "La solicitud excedió el tiempo límite de 60 segundos",
+          });
         } else {
           toast.current.show({
             severity: "warn",
             summary: "Advertencia",
-            detail: "No concuerdan los rostros",
+            detail: error,
           });
         }
+      } finally {
+        setIsLoading(false);
+        clearTimeout(timeoutId);
       }
-    } catch (error) {
-      if (error.name === "AbortError") {
-        toast.current.show({
-          severity: "warn",
-          summary: "Advertencia",
-          detail: "La solicitud excedió el tiempo límite de 60 segundos",
-        });
-      } else {
-        toast.current.show({
-          severity: "warn",
-          summary: "Advertencia",
-          detail: error,
-        });
-      }
-    } finally {
-      setIsLoading(false);
-      clearTimeout(timeoutId);
     }
   };
 
@@ -114,7 +120,6 @@ const SecondValidate = () => {
   };
 
   const uploadCapturedImage = async () => {
-    setIsLoading(true);
     setImage2("");
     setIsUploading(true);
     if (capturedImage) {
@@ -190,6 +195,11 @@ const SecondValidate = () => {
                       </div>
                     </div>
                     <div className="user" id="login-form">
+                      {isLoading && (
+                        <div className="loading-overlay">
+                          <ProgressSpinner />
+                        </div>
+                      )}
                       <div className="mb-3">
                         <div className="custom-control custom-checkbox small"></div>
 
@@ -213,18 +223,10 @@ const SecondValidate = () => {
                         </button>
                         <button
                           className="btn btn-primary d-block btn-user w-100 butonFacial"
-                          onClick={async () => {
-                            await uploadCapturedImage();
-                            !isUploading && image2 !== ""
-                              ? handleLogin()
-                              : null;
-                          }}
+                          onClick={handleLogin}
                         >
                           Iniciar Sesión
                         </button>
-                        <div className="card flex justify-content-center">
-                          {isLoading ? <ProgressSpinner /> : null}
-                        </div>
                       </div>
                     </div>
                   </div>

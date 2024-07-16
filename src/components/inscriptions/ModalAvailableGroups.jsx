@@ -1,5 +1,5 @@
 import axios from "axios";
-import React, { useRef } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import { jwtDecode } from "jwt-decode";
 import { Toast } from "primereact/toast";
 
@@ -8,13 +8,21 @@ const ModalGroups = ({
   isLoadingModal,
   haveAvailableGroups,
   studentGroups,
+  updateGroups,
+  topicId,
 }) => {
   const toast = useRef(null);
+  const [disabledGroups, setDisabledGroups] = useState([]);
+
+  useEffect(() => {
+    const disabled = studentGroups.map((inscription) => inscription.group._id);
+    setDisabledGroups(disabled);
+  }, [studentGroups]);
 
   const createInscription = async (groupId) => {
     const currentDate = new Date().toISOString().split("T")[0];
     try {
-      await axios.post(`${import.meta.env.VITE_API_URL}/inscriptions/save`, {
+      await axios.post(`http://localhost:4000/inscriptions/save`, {
         student: {
           _id: jwtDecode(JSON.parse(localStorage.getItem("authToken"))[0])
             .objectId,
@@ -27,6 +35,7 @@ const ModalGroups = ({
         summary: "Inscripción exitosa",
         detail: "Se ha inscrito correctamente al grupo",
       });
+      setDisabledGroups((prev) => [...prev, groupId]);
     } catch (error) {
       toast.current.show({
         severity: "error",
@@ -34,13 +43,13 @@ const ModalGroups = ({
         detail: "Error al inscribirse al grupo",
       });
     }
+    try {
+      updateGroups(topicId);
+    } catch (error) {}
   };
 
   const isStudentInGroup = (groupId) => {
-    return studentGroups.some(
-      (inscription) =>
-        inscription.group._id === groupId || inscription.group.topic
-    );
+    return disabledGroups.includes(groupId);
   };
 
   return (
@@ -105,22 +114,16 @@ const ModalGroups = ({
                           <td>{group.quotas}</td>
                           <td>
                             <i
-                              className="pi pi-plus-circle"
+                              className={`pi pi-plus-circle ${
+                                isStudentInGroup(group._id)
+                                  ? "disabled-button"
+                                  : "enabled-button"
+                              }`}
                               type="button"
-                              style={{
-                                color: isStudentInGroup(group._id)
-                                  ? "gray"
-                                  : "blue",
-                                fontSize: "1.5rem",
-                                cursor: isStudentInGroup(group._id)
-                                  ? "not-allowed"
-                                  : "pointer",
-                              }}
                               onClick={() =>
                                 !isStudentInGroup(group._id) &&
                                 createInscription(group._id)
                               }
-                              disabled={isStudentInGroup(group._id)}
                             ></i>
                           </td>
                         </tr>

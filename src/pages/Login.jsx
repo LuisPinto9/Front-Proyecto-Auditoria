@@ -4,11 +4,11 @@ import { useNavigate } from "react-router-dom";
 import { Toast } from "primereact/toast";
 import { encrypt } from "../middleware/Encryptation";
 import { ProgressSpinner } from "primereact/progressspinner";
-
 const Login = () => {
   const [email, setEmail] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
   const toast = useRef(null);
 
@@ -39,6 +39,10 @@ const Login = () => {
       });
     }
     setIsLoading(false);
+  };
+
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
   };
 
   return (
@@ -90,13 +94,28 @@ const Login = () => {
                         <div className="mb-3">
                           <input
                             className="form-control form-control-user"
-                            type="password"
+                            type={showPassword ? "text" : "password"}
                             id="exampleInputPassword"
                             placeholder="Password"
                             name="password"
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
                           />
+                        </div>
+                        <div className="mb-3 form-check">
+                          <input
+                            type="checkbox"
+                            className="form-check-input"
+                            id="showPasswordCheck"
+                            checked={showPassword}
+                            onChange={togglePasswordVisibility}
+                          />
+                          <label
+                            className="form-check-label"
+                            htmlFor="showPasswordCheck"
+                          >
+                            {showPassword ? "Ocultar" : "Mostrar"} Contraseña
+                          </label>
                         </div>
                         <div className="mb-3">
                           <div className="custom-control custom-checkbox small"></div>

@@ -11,6 +11,7 @@ function StudentInscription() {
   const [data, setData] = useState([]);
   const [groups, setGroups] = useState([]);
   const [studentGroups, setStudentGroups] = useState([]);
+  const [topicId, setTopicId] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [isLoadingModal, setIsLoadingModal] = useState(false);
   const [haveAvailableGroups, setHaveAvailableGroups] = useState(false);
@@ -39,26 +40,45 @@ function StudentInscription() {
   };
 
   const findGroups = async (topicId) => {
+    setTopicId(topicId);
     setIsLoadingModal(true);
-    setGroups([]);
+    findStudentInscriptions();
     try {
       const response = await axios.get(
         `${import.meta.env.VITE_API_URL}/topics/groups/${topicId}`
       );
-      const response2 = await axios.get(
-        `${
-          import.meta.env.VITE_API_URL
-        }/inscriptions/findIsncriptionsByStudent/${decodedToken.objectId}`
-      );
+
       if (response.data.data.length === 0) {
         setHaveAvailableGroups(false);
       } else {
         setHaveAvailableGroups(true);
         setGroups(response.data.data);
-        setStudentGroups(response2.data.data);
       }
     } catch (error) {}
     setIsLoadingModal(false);
+  };
+
+  const updateGroups = async (topicId) => {
+    try {
+      const response = await axios.get(
+        `${import.meta.env.VITE_API_URL}/topics/groups/${topicId}`
+      );
+      setGroups(response.data.data);
+    } catch (error) {}
+  };
+
+  const findStudentInscriptions = async () => {
+    setStudentGroups([]);
+    try {
+      const response = await axios.get(
+        `${
+          import.meta.env.VITE_API_URL
+        }/inscriptions/findIsncriptionsByStudent/${decodedToken.objectId}`
+      );
+      if (response.data.data.length !== 0) {
+        setStudentGroups(response.data.data);
+      }
+    } catch (error) {}
   };
 
   return (
@@ -144,6 +164,8 @@ function StudentInscription() {
                   isLoadingModal={isLoadingModal}
                   haveAvailableGroups={haveAvailableGroups}
                   studentGroups={studentGroups}
+                  updateGroups={updateGroups}
+                  topicId={topicId}
                 />
               </div>
             </div>

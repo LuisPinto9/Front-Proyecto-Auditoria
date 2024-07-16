@@ -98,7 +98,7 @@ const UserInformation = () => {
 
   return (
     <div className="card flex p-4 m-4">
-      <Card title="Informacion del usuario">
+      <Card title="Información del usuario">
         <div className="user-info-container">
           <div className="user-image">
             <Image src={userImage} alt="Image" width="224" preview />
