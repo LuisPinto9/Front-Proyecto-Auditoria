@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Image } from "primereact/image";
 import { Card } from "primereact/card";
 import { Fieldset } from "primereact/fieldset";
+import { ProgressSpinner } from "primereact/progressspinner";
 import axios from "axios";
 
 const decodeToken = async () => {
@@ -56,6 +57,7 @@ const getAcademicInformation = async (idProgram) => {
 const UserInformation = () => {
   const [user, setUser] = useState({});
   const [userImage, setUserImage] = useState("");
+  const [isLoadingImage, setIsLoadingImage] = useState(true);
   const [userInformation, setUserInformation] = useState({});
   const [userAcademic, setUserAcademic] = useState({});
   const [userFacultad, setUserFacultad] = useState({});
@@ -65,13 +67,16 @@ const UserInformation = () => {
       try {
         const decodedUser = await decodeToken();
         setUser(decodedUser);
+        setIsLoadingImage(true);
         const image = await getImageUser(decodedUser);
         setUserImage(image);
+        setIsLoadingImage(false);
 
         const informationUser = await getInformationUser(decodedUser.email);
         setUserInformation(informationUser[0]);
       } catch (error) {
         console.error("Error fetching data", error);
+        setIsLoadingImage(false);
       }
     };
 
@@ -101,7 +106,11 @@ const UserInformation = () => {
       <Card title="Información del usuario">
         <div className="user-info-container">
           <div className="user-image">
-            <Image src={userImage} alt="Image" width="224" preview />
+            {isLoadingImage ? (
+              <ProgressSpinner />
+            ) : (
+              <Image src={userImage} alt="Image" width="224" preview />
+            )}
           </div>
 
           <div className="user-details">

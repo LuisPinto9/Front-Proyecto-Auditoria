@@ -16,7 +16,6 @@ const CreateStudent = () => {
   const [selectedProgram, setSelectedProgram] = useState(null);
   const [date, setDate] = useState(null);
   const [password, setPassword] = useState("");
-  const [id, setId] = useState(null);
   const [identification, setIdentification] = useState(null);
   const [code, setCode] = useState(null);
   const [firstName, setFirstName] = useState("");
@@ -111,7 +110,7 @@ const CreateStudent = () => {
       return;
     }
     const studentData = {
-      id: id,
+      id: identification,
       Identification: identification,
       code: code,
       documentType: selectedType ? selectedType.code : "Ninguno",
@@ -130,7 +129,7 @@ const CreateStudent = () => {
       image: urlImage,
     };
 
-    uploadFile();
+    //uploadFile();
     axios
       .post(`${import.meta.env.VITE_API_URL}/students/`, studentData)
       .then((response) => {
@@ -142,11 +141,11 @@ const CreateStudent = () => {
         });
       })
       .catch((error) => {
-        console.log(error);
+        console.log("error"+error.message);
         toast.current.show({
           severity: "error",
           summary: "Error",
-          detail: "Error guardando el estudiante.",
+          detail: error.response.data.error,
         });
       });
 
@@ -161,11 +160,10 @@ const CreateStudent = () => {
         });
       })
       .catch((error) => {
-        console.log(error);
         toast.current.show({
           severity: "error",
           summary: "Error",
-          detail: "Error creando el usuario.",
+          detail: error.response.data.error,
         });
       });
   };
@@ -239,17 +237,7 @@ const CreateStudent = () => {
     <div className="card p-4 m-4">
       <h3>Crear Usuarios</h3>
       <div className="row">
-        <div className="col-md-6">
-          <div className="p-inputgroup mb-3">
-            <span className="p-inputgroup-addon">ID</span>
-            <InputNumber
-              useGrouping={false}
-              value={id}
-              onValueChange={(e) => setId(e.value)}
-              placeholder="Ingrese solo números"
-            />
-          </div>
-
+        <div className="col-md-">
           <div className="p-inputgroup mb-3">
             <span className="p-inputgroup-addon">Identificación</span>
             <InputNumber
@@ -351,9 +339,6 @@ const CreateStudent = () => {
               feedback={false}
             />
           </div>
-        </div>
-
-        <div className="col-md-6 mb-3">
           <div className="mb-3">
             <Dropdown
               value={selectedRole}
@@ -364,6 +349,10 @@ const CreateStudent = () => {
               className="w-full"
             />
           </div>
+        </div>
+
+        <div className="col-md- mb-3">
+
 
           <div className="mb-3">
             <Dropdown
@@ -376,9 +365,10 @@ const CreateStudent = () => {
             />
           </div>
 
-          <div className="card mb-3">
+          <div className="card mb-6">
             <Toast ref={toast}></Toast>
             <FileUpload
+            mode="basic"
               name="demo[]"
               multiple
               accept="image/*"
