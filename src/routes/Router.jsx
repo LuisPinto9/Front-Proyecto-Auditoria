@@ -28,22 +28,78 @@ const Router = () => {
             </CheckAuthSecondValidation>
           }
         />
-        <Route exact path="/listTopic" Component={ListTopic} />
+        <Route
+          exact
+          path="/listTopic"
+          element={
+            <CheckAuth requiredType="admin">
+              <ListTopic />
+            </CheckAuth>
+          }
+        />
         <Route
           exact
           path="/listStudents"
           element={
-            // <CheckAuth requiredType="admin">
+            <CheckAuth requiredType="admin">
               <ListStudents />
-            // </CheckAuth>
+            </CheckAuth>
           }
         />
-        <Route exact path="/listInscription" Component={ListInscription} />
-        <Route exact path="/listGroups" Component={ListGroups} />
-        <Route exact path="/saveStudent" Component={SaveStudent} />
-        <Route exact path="/studentInscription" element={<StudentInscription/>} />
-        <Route exact path="/userInformation" element={<DataUser/>} />
-        <Route exact path="/TopicInscription" element={<TopicInscription/>} />
+        <Route
+          exact
+          path="/listInscription"
+          element={
+            <CheckAuth requiredType="admin">
+              <ListInscription />
+            </CheckAuth>
+          }
+        />
+        <Route
+          exact
+          path="/listGroups"
+          element={
+            <CheckAuth requiredType="admin">
+              <ListGroups />
+            </CheckAuth>
+          }
+        />
+        <Route
+          exact
+          path="/saveStudent"
+          element={
+            <CheckAuth requiredType="admin">
+              <SaveStudent />
+            </CheckAuth>
+          }
+        />
+        <Route
+          exact
+          path="/studentInscription"
+          element={
+            <CheckAuth requiredType="student">
+              <StudentInscription />
+            </CheckAuth>
+          }
+        />
+        <Route
+          exact
+          path="/userInformation"
+          element={
+            <CheckAuth requiredType="student">
+              <DataUser />
+            </CheckAuth>
+          }
+        />
+        <Route
+          exact
+          path="/TopicInscription"
+          element={
+            <CheckAuth requiredType="student">
+              <TopicInscription />
+            </CheckAuth>
+          }
+        />
       </Routes>
     </BrowserRouter>
   );

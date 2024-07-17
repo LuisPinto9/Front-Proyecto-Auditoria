@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { Toast } from "primereact/toast";
 import { encrypt } from "../middleware/Encryptation";
 import { ProgressSpinner } from "primereact/progressspinner";
+
 const Login = () => {
   const [email, setEmail] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -16,7 +17,7 @@ const Login = () => {
     setIsLoading(true);
     event.preventDefault();
     const loginData = { username: email, password };
-    const response = await fetch(`http://localhost:4000/login/`, {
+    const response = await fetch(`${import.meta.env.VITE_FACE_API_URL}/login`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
