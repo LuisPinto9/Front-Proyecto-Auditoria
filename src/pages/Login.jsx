@@ -15,31 +15,32 @@ const Login = () => {
 
   const handleLogin = async (event) => {
     setIsLoading(true);
-    event.preventDefault();
-    const loginData = { username: email, password };
-    const response = await fetch(`${import.meta.env.VITE_FACE_API_URL}/login`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(loginData),
-    });
+    try {
+      event.preventDefault();
+      const loginData = { username: email, password };
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/login`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(loginData),
+      });
 
-    const result = await response.json();
-    if (result.state) {
+      const result = await response.json();
       SaveLocalStorage("authToken", result.token);
       SaveLocalStorage("secondAccess", encrypt("true"));
       SaveLocalStorage("imageURL", result.data.image);
       navigate("/secondValidation");
-    } else {
+    } catch (error) {
       toast.current.show({
         severity: "error",
         summary: "Error de inicio de sesión",
         detail: "Revise el usuario o contraseña.",
         life: 3000,
       });
+    } finally {
+      setIsLoading(false);
     }
-    setIsLoading(false);
   };
 
   const togglePasswordVisibility = () => {
