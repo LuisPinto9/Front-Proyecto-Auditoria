@@ -45,8 +45,8 @@ const SecondValidate = () => {
     }
 
     const loginData = {
-      imageUrl1: trueImage[0],
-      imageUrl2: image2,
+      imageUrl1: trueImage[0], 
+      imageUrl2: image2, //esta Ya va cifrada
     };
 
     const controller = new AbortController();
@@ -56,7 +56,7 @@ const SecondValidate = () => {
       const startTime = Date.now();
 
       const response = await fetch(
-        "https://face-match-lxpiymvlcq-uc.a.run.app/face/compare",
+        `${import.meta.env.VITE_FACE_API_URL}/face/compare`,
         {
           method: "POST",
           headers: {
