@@ -7,7 +7,6 @@ import { jwtDecode } from "jwt-decode";
 
 function TopicInscription() {
   const toast = useRef(null);
-  const [data, setData] = useState([]);
   const [groups, setGroups] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const token = JSON.parse(localStorage.getItem("authToken"))[0];
@@ -23,11 +22,22 @@ function TopicInscription() {
       if (token) {
         const response = await axios.get(
           `${import.meta.env.VITE_API_URL}/inscriptions/buscarIncritos/${decodedToken.objectId}`
+         
         );
-        setGroups(response.data.data);
+        console.log("inscripciones:",response.data.data)
+        if (response.data.success) {
+          setGroups(response.data.data);
+        } else {
+          toast.current.show({
+            severity: "error",
+            summary: "Error",
+            detail: "No se encontraron inscripciones.",
+            life: 3000,
+          });
         
       }
-      console.log(decodedToken.objectId)
+    }
+      // console.log(decodedToken.objectId)
     } catch (error) {
       console.error("Error fetching groups:", error);
       toast.current.show({
@@ -45,7 +55,7 @@ function TopicInscription() {
     setIsLoading(true);
     try {
       await axios.delete(
-        `${import.meta.env.VITE_API_URL}/inscriptions/${inscriptionId}`
+        `${import.meta.env.VITE_API_URL}/inscriptions/delete/${inscriptionId}`
       );
       toast.current.show({
         severity: "success",
@@ -53,7 +63,7 @@ function TopicInscription() {
         detail: "La inscripción ha sido eliminada correctamente.",
         life: 3000,
       });
-      fetchTopics(); // Actualizar la lista de temas después de la eliminación
+      fetchGroups(); // Actualizar la lista de temas después de la eliminación
     } catch (error) {
       console.error("Error deleting inscription:", error);
       toast.current.show({
@@ -119,23 +129,23 @@ function TopicInscription() {
                           </tr>
                         </thead>
                         <tbody>
-                          {groups.map((topic) => (
-                            <tr key={topic._id}>
-                              <td>{topic.name}</td>
-                              <td>{topic.aula}</td>
-                              <td>{topic.credits}</td>
-                              <td>{topic.state}</td>
-                              <td>{topic.quotas}</td>
-                              <td>{topic.grupo}</td>
+                        {groups.map((group) => (
+                            <tr key={group.inscriptionId}>
+                              <td>{group.name}</td>
+                              <td>{group.aula}</td>
+                              <td>{group.credits}</td>
+                              <td>{group.state}</td>
+                              <td>{group.quotas}</td>
+                              <td>{group.grupo}</td>
                               <td>
-                                <button
+                              <button
                                   className="btn btn-danger btn-sm"
-                                  onClick={() => deleteInscription(topic.inscriptionId)}
+                                  onClick={() => deleteInscription(group.inscriptionId)}
                                 >
                                   Eliminar
                                 </button>
                               </td>
-                              
+
                             </tr>
                           ))}
                         </tbody>
