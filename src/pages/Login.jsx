@@ -102,6 +102,11 @@ const Login = () => {
                             name="password"
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
+                            onKeyUp={(e) => {
+                              if (e.key === "Enter") {
+                                handleLogin(e);
+                              }
+                            }}
                           />
                         </div>
                         <div className="mb-3 form-check">

@@ -68,7 +68,6 @@ function StudentInscription() {
   };
 
   const findStudentInscriptions = async () => {
-    setStudentGroups([]);
     try {
       const response = await axios.get(
         `${
@@ -128,7 +127,6 @@ function StudentInscription() {
                             <th>Nombre</th>
                             <th>Aula</th>
                             <th>Creditos</th>
-                            <th>Cupos</th>
                           </tr>
                         </thead>
                         <tbody>
@@ -151,7 +149,6 @@ function StudentInscription() {
                               <td>{topic.name}</td>
                               <td>{topic.aula}</td>
                               <td>{topic.credits}</td>
-                              <td>{topic.quotas}</td>
                             </tr>
                           ))}
                         </tbody>
