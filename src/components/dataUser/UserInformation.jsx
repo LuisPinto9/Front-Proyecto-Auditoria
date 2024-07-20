@@ -61,6 +61,7 @@ const UserInformation = () => {
   const [userInformation, setUserInformation] = useState({});
   const [userAcademic, setUserAcademic] = useState({});
   const [userFacultad, setUserFacultad] = useState({});
+  const [imageWidth, setImageWidth] = useState(224); // Estado para manejar el ancho de la imagen
 
   useEffect(() => {
     const fetchData = async () => {
@@ -91,6 +92,7 @@ const UserInformation = () => {
             userInformation.program
           );
           setUserAcademic(academicInfo);
+          console.log(academicInfo.faculty.name);
           setUserFacultad(academicInfo.faculty);
         } catch (error) {
           console.error("Error fetching academic information", error);
@@ -101,6 +103,25 @@ const UserInformation = () => {
     fetchAcademicInformation();
   }, [userInformation]);
 
+  // Efecto para manejar el cambio de tamaño de ventana
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth < 775) {
+        setImageWidth(150);
+      } else {
+        setImageWidth(224);
+      }
+    };
+
+    window.addEventListener('resize', handleResize);
+
+    // Ejecutar la función de inmediato para ajustar el tamaño inicial
+    handleResize();
+
+    // Limpiar el event listener
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
   return (
     <div className="card flex p-4 m-4">
       <Card title="Información del usuario">
@@ -109,13 +130,13 @@ const UserInformation = () => {
             {isLoadingImage ? (
               <ProgressSpinner />
             ) : (
-              <Image src={userImage} alt="Image" width="224" preview />
+              <Image className="userImage" src={userImage} alt="Image" width={`${imageWidth}`} preview />
             )}
           </div>
 
           <div className="user-details">
             <Fieldset legend="Información Básica" toggleable>
-              <div className="infoUser">
+              <div className="m-0 infoUser">
                 <div>
                   <p>
                     <strong>Nombre: </strong> {userInformation.firstName}
@@ -155,7 +176,7 @@ const UserInformation = () => {
                 </div>
               </div>
             </Fieldset>
-            <Fieldset legend="Datos del programa" toggleable>
+            <Fieldset legend="Datos del programa"  toggleable>
               <div className="infoUser">
                 <div>
                   <p>

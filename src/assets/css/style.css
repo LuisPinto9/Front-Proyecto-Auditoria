@@ -140,3 +140,28 @@ Estilos pagina no encontrada
   cursor: not-allowed;
   font-size: 1.5rem;
 }
+
+/*Media Query para el lateral*/
+/* Cuando la pantalla es menor a 775px, ocultar texto */
+@media (max-width: 775px) {
+  .sidebar-brand-text,
+  .my-custom-button .text {
+    display: none;
+  }
+
+  .my-custom-button .icon {
+    display: inline-block;
+  }
+}
+
+/* Cuando la pantalla es mayor a 775px, mostrar texto e iconos */
+@media (min-width: 776px) {
+  .sidebar-brand-text,
+  .my-custom-button .text {
+    display: inline-block;
+  }
+
+  .my-custom-button .icon {
+    display: inline-block;
+  }
+}
