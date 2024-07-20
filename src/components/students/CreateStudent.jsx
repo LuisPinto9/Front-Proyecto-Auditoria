@@ -362,6 +362,8 @@ const CreateStudent = () => {
               optionLabel="name"
               placeholder="Seleccione el programa academico"
               className="w-full"
+              filter
+              filterBy="name"
             />
           </div>
 
