@@ -24,7 +24,6 @@ function TopicInscription() {
           `${import.meta.env.VITE_API_URL}/inscriptions/buscarIncritos/${decodedToken.objectId}`
          
         );
-        console.log("inscripciones:",response.data.data)
         if (response.data.success) {
           setGroups(response.data.data);
         } else {
@@ -37,9 +36,8 @@ function TopicInscription() {
         
       }
     }
-      // console.log(decodedToken.objectId)
+      
     } catch (error) {
-      console.error("Error fetching groups:", error);
       toast.current.show({
         severity: "error",
         summary: "Error",
@@ -63,9 +61,8 @@ function TopicInscription() {
         detail: "La inscripción ha sido eliminada correctamente.",
         life: 3000,
       });
-      fetchGroups(); // Actualizar la lista de temas después de la eliminación
+      fetchGroups();
     } catch (error) {
-      console.error("Error deleting inscription:", error);
       toast.current.show({
         severity: "error",
         summary: "Error",

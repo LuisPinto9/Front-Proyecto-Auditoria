@@ -35,8 +35,7 @@ const ModalGroups = ({
     try {
       await axios.post(`${import.meta.env.VITE_API_URL}/inscriptions/save`, {
         student: {
-          _id: jwtDecode(JSON.parse(localStorage.getItem("authToken"))[0])
-            .objectId,
+          _id: jwtDecode(JSON.parse(localStorage.getItem("authToken"))[0]).objectId,
         },
         group: { _id: groupId },
         registrationDate: currentDate,
@@ -48,7 +47,7 @@ const ModalGroups = ({
       });
       setDisabledGroups((prev) => {
         const updatedDisabledGroups = [...prev, groupId];
-
+  
         groups.forEach((group) => {
           if (
             group.topic === topicId &&
@@ -57,21 +56,24 @@ const ModalGroups = ({
             updatedDisabledGroups.push(group._id);
           }
         });
-
+  
         return updatedDisabledGroups;
       });
     } catch (error) {
+      
       toast.current.show({
         severity: "error",
         summary: "Error",
-        detail: "Error al inscribirse al grupo",
+        detail: error.response?.data?.error || "Error al inscribirse al grupo",
       });
     }
     try {
       updateGroups(topicId);
-    } catch (error) {}
+    } catch (error) {
+      console.error("Error al actualizar los grupos:", error);
+    }
   };
-
+ 
   const isStudentInGroup = (groupId) => {
     return disabledGroups.includes(groupId);
   };
