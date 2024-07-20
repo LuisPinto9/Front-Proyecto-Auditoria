@@ -15,7 +15,18 @@ const ModalGroups = ({
   const [disabledGroups, setDisabledGroups] = useState([]);
 
   useEffect(() => {
-    const disabled = studentGroups.map((inscription) => inscription.group._id);
+    const disabled = [];
+
+    groups.forEach((group) => {
+      if (
+        studentGroups.some(
+          (inscription) => inscription.group.topic === group.topic
+        )
+      ) {
+        disabled.push(group._id);
+      }
+    });
+
     setDisabledGroups(disabled);
   }, [studentGroups]);
 
@@ -35,7 +46,20 @@ const ModalGroups = ({
         summary: "Inscripción exitosa",
         detail: "Se ha inscrito correctamente al grupo",
       });
-      setDisabledGroups((prev) => [...prev, groupId]);
+      setDisabledGroups((prev) => {
+        const updatedDisabledGroups = [...prev, groupId];
+
+        groups.forEach((group) => {
+          if (
+            group.topic === topicId &&
+            !updatedDisabledGroups.includes(group._id)
+          ) {
+            updatedDisabledGroups.push(group._id);
+          }
+        });
+
+        return updatedDisabledGroups;
+      });
     } catch (error) {
       toast.current.show({
         severity: "error",
