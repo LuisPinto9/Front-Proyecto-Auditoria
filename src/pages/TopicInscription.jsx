@@ -21,33 +21,27 @@ function TopicInscription() {
     try {
       if (token) {
         const response = await axios.get(
-          `${import.meta.env.VITE_API_URL}/inscriptions/buscarIncritos/${decodedToken.objectId}`
-         
+          `${import.meta.env.VITE_API_URL}/inscriptions/buscarIncritos/${
+            decodedToken.objectId
+          }`
         );
         if (response.data.success) {
           setGroups(response.data.data);
         } else {
-          toast.current.show({
-            severity: "error",
-            summary: "Error",
-            detail: "No se encontraron inscripciones.",
-            life: 3000,
-          });
-        
+          setGroups([]);
+        }
       }
-    }
-      
     } catch (error) {
       toast.current.show({
-        severity: "error",
-        summary: "Error",
-        detail: "Error al obtener los grupos.",
+        severity: "info",
+        summary: "Informacion",
+        detail: "no tiene inscripciones",
         life: 3000,
       });
+      setGroups([]);
     }
     setIsLoading(false);
   };
-
 
   const deleteInscription = async (inscriptionId) => {
     setIsLoading(true);
@@ -61,7 +55,6 @@ function TopicInscription() {
         detail: "La inscripción ha sido eliminada correctamente.",
         life: 3000,
       });
-      fetchGroups();
     } catch (error) {
       toast.current.show({
         severity: "error",
@@ -69,8 +62,13 @@ function TopicInscription() {
         detail: "Error al eliminar la inscripción.",
         life: 3000,
       });
+    } finally {
+      const updatedGroups = await fetchGroups();
+      if (updatedGroups.length === 0) {
+        setGroups([]);
+      }
+      setIsLoading(false);
     }
-    setIsLoading(false);
   };
 
   return (
@@ -116,7 +114,7 @@ function TopicInscription() {
                       <table className="table my-0 text-center" id="dataTable">
                         <thead>
                           <tr>
-                          <th>Materia</th>
+                            <th>Materia</th>
                             <th>Aula</th>
                             <th>Créditos</th>
                             <th>Estado</th>
@@ -126,7 +124,7 @@ function TopicInscription() {
                           </tr>
                         </thead>
                         <tbody>
-                        {groups.map((group) => (
+                          {groups.map((group) => (
                             <tr key={group.inscriptionId}>
                               <td>{group.name}</td>
                               <td>{group.aula}</td>
@@ -135,14 +133,15 @@ function TopicInscription() {
                               <td>{group.quotas}</td>
                               <td>{group.grupo}</td>
                               <td>
-                              <button
+                                <button
                                   className="btn btn-danger btn-sm"
-                                  onClick={() => deleteInscription(group.inscriptionId)}
+                                  onClick={() =>
+                                    deleteInscription(group.inscriptionId)
+                                  }
                                 >
                                   Eliminar
                                 </button>
                               </td>
-
                             </tr>
                           ))}
                         </tbody>
