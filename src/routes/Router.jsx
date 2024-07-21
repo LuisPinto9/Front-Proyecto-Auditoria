@@ -7,6 +7,7 @@ import ListGroups from "../pages/ListGroups";
 import Login from "../pages/Login";
 import SecondValidate from "../pages/SecondValidate";
 import SaveStudent from "../pages/SaveStudent";
+import ListFaculties from "../pages/ListFaculties";
 import { CheckAuth, CheckAuthSecondValidation } from "../middleware/CheckAuth";
 import { Error404 } from "../pages/Error404";
 import StudentInscription from "../pages/StudentInscription";
@@ -70,6 +71,15 @@ const Router = () => {
           element={
             <CheckAuth requiredType="admin">
               <SaveStudent />
+            </CheckAuth>
+          }
+        />
+        <Route
+          exact
+          path="/listFaculties"
+          element={
+            <CheckAuth requiredType="admin">
+              <ListFaculties />
             </CheckAuth>
           }
         />

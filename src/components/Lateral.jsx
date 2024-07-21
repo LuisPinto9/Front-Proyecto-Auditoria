@@ -139,6 +139,28 @@ const Lateral = () => {
                 </div>
               </div>
             </div>
+            <div className="margin-right-38">
+              <button
+                className="my-custom-button btn btn-primary"
+                data-bs-toggle="collapse"
+                href="#collapse-4"
+              >
+                <i className="far fa-address-book icon"></i>&nbsp;<span className="text">Facultades</span>
+              </button>
+              <div className="collapse ms-4" id="collapse-4">
+                <div>
+                  <button className="my-custom-button text-white">
+                    <Link
+                      to="/listFaculties"
+                      className="text-white"
+                      style={{ textDecoration: "none" }}
+                    >
+                      <i className="pi pi-list icon"></i>&nbsp;<span className="text">Listar</span>
+                    </Link>
+                  </button>
+                </div>
+              </div>
+          </div>
           </div>
         )}
       </div>
