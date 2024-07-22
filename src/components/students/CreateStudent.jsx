@@ -25,6 +25,7 @@ const CreateStudent = () => {
   const [file, setFile] = useState(null);
   const [urlImage, setUrlImage] = useState();
   const toast = useRef(null);
+  const fileUploadRef = useRef(null); // Nueva referencia para FileUpload
 
   const [programs, setPrograms] = useState([]);
 
@@ -105,7 +106,7 @@ const CreateStudent = () => {
     }
   };
 
-  const handleSave = () => {
+  const handleSave = async () => {
     if (!validateFields()) {
       return;
     }
@@ -129,7 +130,7 @@ const CreateStudent = () => {
       image: urlImage,
     };
 
-    //uploadFile();
+    await uploadFile();
     axios
       .post(`${import.meta.env.VITE_API_URL}/students/`, studentData)
       .then((response) => {
@@ -158,6 +159,7 @@ const CreateStudent = () => {
           summary: "Éxito",
           detail: "Usuario Creado.",
         });
+        cleanFields();
       })
       .catch((error) => {
         toast.current.show({
@@ -222,7 +224,6 @@ const CreateStudent = () => {
     setSelectedProgram(null);
     setDate(null);
     setPassword("");
-    setId(null);
     setIdentification(null);
     setCode(null);
     setFirstName("");
@@ -231,6 +232,7 @@ const CreateStudent = () => {
     setCellphone(null);
     setFile(null);
     setUrlImage(null);
+    fileUploadRef.current.clear(); // Limpiar el campo de carga de archivos
   };
 
   return (
@@ -352,8 +354,6 @@ const CreateStudent = () => {
         </div>
 
         <div className="col-md- mb-3">
-
-
           <div className="mb-3">
             <Dropdown
               value={selectedProgram}
@@ -370,7 +370,8 @@ const CreateStudent = () => {
           <div className="card mb-6">
             <Toast ref={toast}></Toast>
             <FileUpload
-            mode="basic"
+              ref={fileUploadRef} // Asigna la referencia
+
               name="demo[]"
               multiple
               accept="image/*"
