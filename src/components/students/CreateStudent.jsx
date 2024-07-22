@@ -63,7 +63,7 @@ const CreateStudent = () => {
   ];
 
   const handleFileSelect = (e) => {
-    setFile(e.files[0]);
+    setFile(e.target.files[0]);
   };
 
   const uploadFile = async () => {
@@ -142,7 +142,7 @@ const CreateStudent = () => {
         });
       })
       .catch((error) => {
-        console.log("error"+error.message);
+        console.log("error" + error.message);
         toast.current.show({
           severity: "error",
           summary: "Error",
@@ -230,9 +230,11 @@ const CreateStudent = () => {
     setLastName("");
     setEmail("");
     setCellphone(null);
+    if (fileUploadRef.current) {
+      fileUploadRef.current.value = ""; // Limpia el valor del input de tipo file
+    }
     setFile(null);
     setUrlImage(null);
-    fileUploadRef.current.clear(); // Limpiar el campo de carga de archivos
   };
 
   return (
@@ -353,33 +355,35 @@ const CreateStudent = () => {
           </div>
         </div>
 
-        <div className="col-md- mb-3">
+        <div className=" mb-3">
           <div className="mb-3">
             <Dropdown
               value={selectedProgram}
               onChange={(e) => setSelectedProgram(e.value)}
               options={programs}
               optionLabel="name"
-              placeholder="Seleccione el programa academico"
-              className="w-full"
+              placeholder="Seleccione el programa académico"
               filter
+              className="custom-dropdown"
               filterBy="name"
             />
           </div>
 
-          <div className="card mb-6">
+          <div className="card mb-3">
             <Toast ref={toast}></Toast>
-            <FileUpload
-              ref={fileUploadRef} // Asigna la referencia
-
-              name="demo[]"
-              multiple
-              accept="image/*"
-              maxFileSize={1000000}
-              customUpload
-              uploadHandler={uploadFile}
-              onSelect={handleFileSelect}
-            />
+            <div className="mb-3 p-2">
+              <label htmlFor="formFileMultiple" className="form-label">
+                Seleccione una imagen
+              </label>
+              <input
+                className="form-control"
+                type="file"
+                id="formFileMultiple"
+                accept="image/*"
+                onChange={handleFileSelect}
+                ref={fileUploadRef} // Asignar la referencia al input
+              />
+            </div>
           </div>
           <div style={{ textAlign: "right" }}>
             <Button

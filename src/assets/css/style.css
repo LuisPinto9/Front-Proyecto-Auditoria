@@ -141,7 +141,7 @@ Estilos pagina no encontrada
   font-size: 1.5rem;
 }
 
-/*Media Query para el lateral*/
+/* Media Query para el lateral */
 /* Cuando la pantalla es menor a 775px, ocultar texto */
 @media (max-width: 775px) {
   .sidebar-brand-text,
@@ -151,6 +151,18 @@ Estilos pagina no encontrada
 
   .my-custom-button .icon {
     display: inline-block;
+  }
+
+  /* Alinea los ítems al centro en pantallas menores a 775px */
+  .container-fluid {
+    align-items: center !important; /* Centra los ítems horizontalmente */
+    justify-content: center !important; /* Centra los ítems verticalmente */
+  }
+
+  .navbar.sidebar {
+    width: fit-content;
+    min-width: 0px;
+    max-width: none;
   }
 }
 
@@ -164,4 +176,16 @@ Estilos pagina no encontrada
   .my-custom-button .icon {
     display: inline-block;
   }
+}
+
+.custom-dropdown {
+  max-width: 100%;
+  width: 100%;
+}
+
+.p-dropdown-item {
+  white-space: normal;
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+  word-break: break-word;
 }
