@@ -1,9 +1,17 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { Image } from "primereact/image";
 import { Card } from "primereact/card";
 import { Fieldset } from "primereact/fieldset";
 import { ProgressSpinner } from "primereact/progressspinner";
 import axios from "axios";
+
+import { Button } from "primereact/button";
+import { Dialog } from "primereact/dialog";
+import { InputText } from "primereact/inputtext";
+import { Password } from "primereact/password";
+import { Toast } from "primereact/toast";
+import { jwtDecode } from "jwt-decode";
+
 
 const decodeToken = async () => {
   try {
@@ -54,6 +62,8 @@ const getAcademicInformation = async (idProgram) => {
   }
 };
 
+
+
 const UserInformation = () => {
   const [user, setUser] = useState({});
   const [userImage, setUserImage] = useState("");
@@ -62,6 +72,58 @@ const UserInformation = () => {
   const [userAcademic, setUserAcademic] = useState({});
   const [userFacultad, setUserFacultad] = useState({});
   const [imageWidth, setImageWidth] = useState(224); // Estado para manejar el ancho de la imagen
+
+  const [showPasswordModal, setShowPasswordModal] = useState(false);
+  const [currentPassword, setCurrentPassword] = useState("");
+  const [newPassword, setNewPassword] = useState("");
+  const toast = useRef(null);
+
+  
+
+
+  const handleChangePassword = async () => {
+    try {
+      const token = JSON.parse(localStorage.getItem("authToken"))[0];
+      const decodedToken = token ? jwtDecode(token) : null;
+      // console.log(decodedToken.objectIduser,currentPassword,newPassword)
+     
+      const response = await axios.patch(
+        `http://localhost:4000/login/changePassword`,
+        {
+          studentId: decodedToken.objectIduser,
+          currentPassword,
+          newPassword,
+        },
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+  // console.log("respuesta",response.data)
+      if (response.data.success) {
+        toast.current.show({
+          severity: "success",
+          summary: "Contraseña actualizada",
+          detail: "La contraseña ha sido actualizada correctamente",
+          life: 3000,
+        });
+        setShowPasswordModal(false);
+      } else {
+        toast.current.show({
+          severity: "error",
+          summary: "Error",
+          detail: response.data.message || "No se pudo actualizar la contraseña",
+          life: 3000,
+        });
+      }
+    } catch (error) {
+      toast.current.show({
+        severity: "error",
+        summary: "Error",
+        detail: "Error al actualizar la contraseña",
+        life: 3000,
+      });
+    }
+  };
 
   useEffect(() => {
     const fetchData = async () => {
@@ -113,14 +175,15 @@ const UserInformation = () => {
       }
     };
 
-    window.addEventListener('resize', handleResize);
+    window.addEventListener("resize", handleResize);
 
     // Ejecutar la función de inmediato para ajustar el tamaño inicial
     handleResize();
 
     // Limpiar el event listener
-    return () => window.removeEventListener('resize', handleResize);
+    return () => window.removeEventListener("resize", handleResize);
   }, []);
+
 
   return (
     <div className="card flex p-4 m-4">
@@ -130,7 +193,13 @@ const UserInformation = () => {
             {isLoadingImage ? (
               <ProgressSpinner />
             ) : (
-              <Image className="userImage" src={userImage} alt="Image" width={`${imageWidth}`} preview />
+              <Image
+                className="userImage"
+                src={userImage}
+                alt="Image"
+                width={`${imageWidth}`}
+                preview
+              />
             )}
           </div>
 
@@ -176,7 +245,59 @@ const UserInformation = () => {
                 </div>
               </div>
             </Fieldset>
-            <Fieldset legend="Datos del programa"  toggleable>
+            <Toast ref={toast} />
+            <Fieldset legend="Recuperación de contraseña" toggleable>
+              <div className="m-0 infoUser">
+                <Button
+                  label="Cambiar contraseña"
+                  icon="pi pi-key"
+                  onClick={() => setShowPasswordModal(true)}
+                />
+              </div>
+            </Fieldset>
+
+
+            <Dialog
+              header="Cambiar Contraseña"
+              visible={showPasswordModal}
+              onHide={() => setShowPasswordModal(false)}
+              footer={
+                <div>
+                  <Button
+                    label="Cancelar"
+                    icon="pi pi-times"
+                    onClick={() => setShowPasswordModal(false)}
+                  />
+                  <Button
+                    label="Cambiar"
+                    icon="pi pi-check"
+                    onClick={handleChangePassword}
+                  />
+                </div>
+              }
+            >
+              <div className="p-field">
+                <label htmlFor="currentPassword">Contraseña Actual</label>
+                <Password
+                  id="currentPassword"
+                  value={currentPassword}
+                  onChange={(e) => setCurrentPassword(e.target.value)}
+                  toggleMask
+                />
+              </div>
+              <div className="p-field">
+                <label htmlFor="newPassword">Nueva Contraseña</label>
+                <Password
+                  id="newPassword"
+                  value={newPassword}
+                  onChange={(e) => setNewPassword(e.target.value)}
+                  toggleMask
+                />
+              </div>
+            </Dialog>
+
+
+            <Fieldset legend="Datos del programa" toggleable>
               <div className="infoUser">
                 <div>
                   <p>
