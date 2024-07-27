@@ -47,7 +47,7 @@ const Login = () => {
     setShowPassword(!showPassword);
   };
   const handleForgotPassword = () => {
-    navigate('/losePassword');
+    navigate('/LosePassword');
   };
 
   return (
