@@ -4,7 +4,7 @@ import NavBar from "../components/NavBar";
 import { Toast } from "primereact/toast";
 import axios from "axios";
 import ModalGroups from "../components/inscriptions/ModalAvailableGroups";
-import { jwtDecode } from "jwt-decode";
+import { jwtDecode } from "jwt-decode"; 
 
 function StudentInscription() {
   const toast = useRef(null);
