@@ -76,6 +76,7 @@ const UserInformation = () => {
   const [showPasswordModal, setShowPasswordModal] = useState(false);
   const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
+  const [isChangeEnabled, setIsChangeEnabled] = useState(false);
   const toast = useRef(null);
 
   
@@ -124,6 +125,15 @@ const UserInformation = () => {
       });
     }
   };
+
+  const validatePassword = (password) => {
+    const regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+    return regex.test(password);
+  };
+  useEffect(() => {
+    setIsChangeEnabled(validatePassword(newPassword));
+  }, [newPassword]);
+
 
   useEffect(() => {
     const fetchData = async () => {
@@ -272,6 +282,7 @@ const UserInformation = () => {
                     label="Cambiar"
                     icon="pi pi-check"
                     onClick={handleChangePassword}
+                    disabled={!isChangeEnabled}
                   />
                 </div>
               }
