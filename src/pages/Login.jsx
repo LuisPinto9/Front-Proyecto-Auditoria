@@ -46,8 +46,9 @@ const Login = () => {
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
   };
+
   const handleForgotPassword = () => {
-    navigate('/LosePassword');
+    navigate("/LosePassword");
   };
 
   return (
@@ -126,15 +127,8 @@ const Login = () => {
                           >
                             {showPassword ? "Ocultar" : "Mostrar"} Contraseña
                           </label>
-                          <div className="mb-3">
-                            <button
-                              onClick={handleForgotPassword}
-                              className="btn btn-link">
-                              ¿Has olvidado tu contraseña?
-                            </button>
-                          </div>
                         </div>
-                        <div className="mb-3">
+                        <div className="mb-4">
                           <div className="custom-control custom-checkbox small"></div>
                         </div>
                         <button
@@ -144,6 +138,14 @@ const Login = () => {
                           Iniciar Sesión
                         </button>
                       </form>
+                      <div className="text-center">
+                        <button
+                          onClick={handleForgotPassword}
+                          className="btn btn-link"
+                        >
+                          ¿Has olvidado tu contraseña?
+                        </button>
+                      </div>
                     </div>
                   </div>
                 </div>

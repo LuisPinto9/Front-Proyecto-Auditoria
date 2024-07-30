@@ -45,7 +45,7 @@ const SecondValidate = () => {
     }
 
     const loginData = {
-      imageUrl1: trueImage[0], 
+      imageUrl1: trueImage[0],
       imageUrl2: image2, //esta Ya va cifrada
     };
 
@@ -246,6 +246,7 @@ const SecondValidate = () => {
                         <button
                           className="btn btn-primary d-block btn-user w-100 butonFacial"
                           onClick={handleLogin}
+                          disabled={!capturedImage}
                         >
                           Iniciar Sesión
                         </button>

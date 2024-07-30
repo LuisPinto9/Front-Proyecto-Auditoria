@@ -95,15 +95,7 @@ const Router = () => {
             </CheckAuth>
           }
         />
-        <Route
-          exact
-          path="/userInformation"
-          element={
-            <CheckAuth requiredType="student">
-              <DataUser />
-            </CheckAuth>
-          }
-        />
+        <Route exact path="/userInformation" element={<DataUser />} />
         <Route
           exact
           path="/TopicInscription"
