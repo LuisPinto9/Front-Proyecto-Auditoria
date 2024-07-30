@@ -1,15 +1,14 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef } from "react";
+import { useNavigate } from "react-router-dom";
 import { ProgressSpinner } from "primereact/progressspinner";
 import Webcam from "react-webcam";
-import { encrypt, decrypt } from "../middleware/Encryptation";
-import { jwtDecode } from "jwt-decode";
+import { encrypt } from "../middleware/Encryptation";
 import axios from "axios";
 import { Toast } from "primereact/toast";
 
 const LosePassword = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [username, setUsername] = useState("");
-  const [submitted, setSubmitted] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
   const [isSearching, setIsSearching] = useState(false);
   const [response, setResponse] = useState("");
@@ -17,6 +16,7 @@ const LosePassword = () => {
   const [capturedImage, setCapturedImage] = useState(null);
   const webcamRef = useRef(null);
   const toast = useRef(null);
+  const navigate = useNavigate();
   const [trueImage, setTrueImage] = useState("");
 
   function generatePassword(length) {
@@ -145,7 +145,7 @@ const LosePassword = () => {
           const result = JSON.parse(responseData);
           if (result.isSamePerson) {
             await sendMail();
-            navigator("/login");
+            navigate("/");
           } else {
             toast.current.show({
               severity: "warn",
