@@ -12,7 +12,6 @@ import { Password } from "primereact/password";
 import { Toast } from "primereact/toast";
 import { jwtDecode } from "jwt-decode";
 
-
 const decodeToken = async () => {
   try {
     const token = JSON.parse(localStorage.getItem("authToken"))[0];
@@ -62,8 +61,6 @@ const getAcademicInformation = async (idProgram) => {
   }
 };
 
-
-
 const UserInformation = () => {
   const [user, setUser] = useState({});
   const [userImage, setUserImage] = useState("");
@@ -79,15 +76,11 @@ const UserInformation = () => {
   const [isChangeEnabled, setIsChangeEnabled] = useState(false);
   const toast = useRef(null);
 
-  
-
-
   const handleChangePassword = async () => {
     try {
       const token = JSON.parse(localStorage.getItem("authToken"))[0];
       const decodedToken = token ? jwtDecode(token) : null;
-      // console.log(decodedToken.objectIduser,currentPassword,newPassword)
-     
+
       const response = await axios.patch(
         `http://localhost:4000/login/changePassword`,
         {
@@ -99,7 +92,7 @@ const UserInformation = () => {
           headers: { Authorization: `Bearer ${token}` },
         }
       );
-  // console.log("respuesta",response.data)
+      // console.log("respuesta",response.data)
       if (response.data.success) {
         toast.current.show({
           severity: "success",
@@ -112,7 +105,8 @@ const UserInformation = () => {
         toast.current.show({
           severity: "error",
           summary: "Error",
-          detail: response.data.message || "No se pudo actualizar la contraseña",
+          detail:
+            response.data.message || "No se pudo actualizar la contraseña",
           life: 3000,
         });
       }
@@ -127,13 +121,13 @@ const UserInformation = () => {
   };
 
   const validatePassword = (password) => {
-    const regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+    const regex =
+      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
     return regex.test(password);
   };
   useEffect(() => {
     setIsChangeEnabled(validatePassword(newPassword));
   }, [newPassword]);
-
 
   useEffect(() => {
     const fetchData = async () => {
@@ -193,7 +187,6 @@ const UserInformation = () => {
     // Limpiar el event listener
     return () => window.removeEventListener("resize", handleResize);
   }, []);
-
 
   return (
     <div className="card flex p-4 m-4">
@@ -266,7 +259,6 @@ const UserInformation = () => {
               </div>
             </Fieldset>
 
-
             <Dialog
               header="Cambiar Contraseña"
               visible={showPasswordModal}
@@ -287,26 +279,29 @@ const UserInformation = () => {
                 </div>
               }
             >
-              <div className="p-field">
-                <label htmlFor="currentPassword">Contraseña Actual</label>
-                <Password
-                  id="currentPassword"
-                  value={currentPassword}
-                  onChange={(e) => setCurrentPassword(e.target.value)}
-                  toggleMask
-                />
-              </div>
-              <div className="p-field">
-                <label htmlFor="newPassword">Nueva Contraseña</label>
-                <Password
-                  id="newPassword"
-                  value={newPassword}
-                  onChange={(e) => setNewPassword(e.target.value)}
-                  toggleMask
-                />
+              <div className="p-fluid">
+                <div className="p-field pb-2">
+                  <label htmlFor="currentPassword">Contraseña Actual</label>
+                  <Password
+                    id="currentPassword"
+                    value={currentPassword}
+                    onChange={(e) => setCurrentPassword(e.target.value)}
+                    toggleMask
+                    className="p-inputtext-sm"
+                  />
+                </div>
+                <div className="p-field">
+                  <label htmlFor="newPassword">Nueva Contraseña</label>
+                  <Password
+                    id="newPassword"
+                    value={newPassword}
+                    onChange={(e) => setNewPassword(e.target.value)}
+                    toggleMask
+                    className="p-inputtext-sm"
+                  />
+                </div>
               </div>
             </Dialog>
-
 
             <Fieldset legend="Datos del programa" toggleable>
               <div className="infoUser">

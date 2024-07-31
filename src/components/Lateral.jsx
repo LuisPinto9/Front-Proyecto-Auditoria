@@ -5,7 +5,9 @@ import { jwtDecode } from "jwt-decode";
 const Lateral = () => {
   const token = JSON.parse(localStorage.getItem("authToken"))[0];
   const decodedToken = token ? jwtDecode(token) : null;
+  const needChangePassword = decodedToken && decodedToken.needChangePassword;
   const isAdmin = decodedToken && decodedToken.role === "admin";
+  console.log(needChangePassword);
 
   return (
     <nav className="navbar align-items-start sidebar sidebar-dark accordion bg-gradient-primary p-0 navbar-dark">
@@ -16,7 +18,7 @@ const Lateral = () => {
           </div>
           <div className="sidebar-brand-text mx-3 text">
             <Link
-              to="/"
+              to="/userInformation"
               className="text-white"
               style={{ textDecoration: "none" }}
             >
@@ -29,9 +31,10 @@ const Lateral = () => {
           <div>
             <div className="margin-right-38">
               <Link
-                to="/userInformation"
-                className="btn btn-primary my-custom-button text-white"
-                style={{ textDecoration: "none" }}
+                to={needChangePassword ? "#" : "/userInformation"}
+                className={`btn btn-primary my-custom-button text-white ${
+                  needChangePassword ? "disabled-link" : ""
+                }`}
               >
                 <i className="pi pi-user icon"></i>&nbsp;
                 <span className="text">Información</span>
@@ -80,7 +83,7 @@ const Lateral = () => {
                 data-bs-toggle="collapse"
                 href="#collapse-1"
               >
-                <i className="far fa-user icon"></i>&nbsp;
+                <i className="pi pi-users icon"></i>&nbsp;
                 <span className="text">Estudiantes</span>
               </button>
               <div className="collapse ms-4" id="collapse-1">
@@ -165,7 +168,7 @@ const Lateral = () => {
                 data-bs-toggle="collapse"
                 href="#collapse-4"
               >
-                <i className="far fa-address-book icon"></i>&nbsp;
+                <i className="pi pi-warehouse icon"></i>&nbsp;
                 <span className="text">Facultades</span>
               </button>
               <div className="collapse ms-4" id="collapse-4">

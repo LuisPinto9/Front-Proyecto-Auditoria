@@ -9,6 +9,7 @@ import { Toast } from "primereact/toast";
 const LosePassword = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [username, setUsername] = useState("");
+  const [userID, setUserID] = useState("");
   const [isUploading, setIsUploading] = useState(false);
   const [isSearching, setIsSearching] = useState(false);
   const [response, setResponse] = useState("");
@@ -18,6 +19,7 @@ const LosePassword = () => {
   const toast = useRef(null);
   const navigate = useNavigate();
   const [trueImage, setTrueImage] = useState("");
+  const [recovered, setRecovered] = useState(false);
 
   function generatePassword(length) {
     const charset =
@@ -31,6 +33,7 @@ const LosePassword = () => {
   }
 
   const searchUsername = async () => {
+    setIsLoading(true);
     if (username) {
       setIsSearching(true);
       let encryptedUsername = encrypt(username);
@@ -41,6 +44,7 @@ const LosePassword = () => {
           }/users/findUsername/${encryptedUsername}`
         );
         const user = response.data.data;
+        setUserID(user._id);
         setTrueImage(user.image);
       } catch (error) {
         console.error("Error al buscar el usuario:", error);
@@ -58,8 +62,8 @@ const LosePassword = () => {
         summary: "Advertencia",
         detail: "Error al encontrar el usuario",
       });
+      setIsSearching(false);
       setIsLoading(false);
-      return;
     }
   };
 
@@ -67,12 +71,13 @@ const LosePassword = () => {
     setIsLoading(true);
     try {
       const newPassword = generatePassword(12);
+      await changePassword(newPassword);
       await axios.post(`${import.meta.env.VITE_API_URL}/mail/sendmail`, {
         email: username,
         subject: "Recuperación de contraseña",
         message: `
           <p>Hola,</p>
-          <p>Hemos verificado correctamente tu solicitud de recuperación de contraseña. Tu nueva contraseña es: <strong>${newPassword}</strong>.</p>
+          <p>Hemos verificado correctamente tu solicitud de recuperación de contraseña. Tu nueva contraseña es: <strong>${newPassword}</strong></p>
           <p>Por favor, inicia sesión en la aplicación y cambia tu contraseña.</p>
         `,
       });
@@ -83,14 +88,24 @@ const LosePassword = () => {
         summary: "Advertencia",
         detail: "Error al enviar el correo",
       });
-    } finally {
       setIsLoading(false);
     }
   };
 
+  const changePassword = async (newPassword) => {
+    try {
+      await axios.patch(
+        `${import.meta.env.VITE_API_URL}/users/update/${userID}`,
+        {
+          password: newPassword,
+        }
+      );
+    } catch (error) {}
+  };
+
   const handleRecoverPassword = async () => {
     setIsLoading(true);
-
+    setRecovered(false);
     const image2 = await uploadCapturedImage();
 
     while (isUploading) {
@@ -103,11 +118,10 @@ const LosePassword = () => {
         summary: "Advertencia",
         detail: "Error al subir la imagen",
       });
-      setIsLoading(false);
       return;
     }
 
-    await searchUsername();
+    searchUsername();
 
     if (!isSearching && trueImage) {
       const loginData = {
@@ -145,6 +159,7 @@ const LosePassword = () => {
           const result = JSON.parse(responseData);
           if (result.isSamePerson) {
             await sendMail();
+            setRecovered(true);
             navigate("/");
           } else {
             toast.current.show({
@@ -169,12 +184,10 @@ const LosePassword = () => {
           });
         }
       } finally {
-        setIsLoading(false);
         clearTimeout(timeoutId);
       }
-    } else {
-      setIsLoading(false);
     }
+    setIsLoading(false);
   };
 
   const captureImage = () => {
@@ -185,9 +198,9 @@ const LosePassword = () => {
   };
 
   const uploadCapturedImage = async () => {
-    setIsUploading(true);
-
+    setIsLoading(true);
     if (capturedImage) {
+      setIsUploading(true);
       try {
         const uniqueTimestamp = new Date().toISOString().replace(/[:.-]/g, "");
 
@@ -257,6 +270,7 @@ const LosePassword = () => {
                       zIndex: 1,
                       borderRadius: "10px",
                     }}
+                    mirrored={true}
                   />
                 )}
               </div>
@@ -272,7 +286,7 @@ const LosePassword = () => {
                       <div className="card mb-3"></div>
                     </div>
                     <div className="user">
-                      {isLoading && (
+                      {(isLoading && !recovered) && (
                         <div className="loading-overlay">
                           <ProgressSpinner />
                         </div>

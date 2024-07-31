@@ -90,11 +90,7 @@ const SecondValidate = () => {
         if (result.isSamePerson) {
           localStorage.removeItem("imageURL");
           SaveLocalStorage("twoFactorAuth", encrypt("ValidatedAccessTrue"));
-
-          jwtDecode(JSON.parse(localStorage.getItem("authToken"))[0]).role ==
-          "student"
-            ? navigate("/userInformation")
-            : navigate("/listStudents");
+          navigate("/userInformation");
         } else {
           toast.current.show({
             severity: "warn",
