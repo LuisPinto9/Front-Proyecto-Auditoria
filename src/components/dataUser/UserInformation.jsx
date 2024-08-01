@@ -121,13 +121,37 @@ const UserInformation = () => {
   };
 
   const validatePassword = (password) => {
-    const regex =
-      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
-    return regex.test(password);
+    const requirements = [
+      { regex: /[a-z]/, message: "al menos una letra minúscula" },
+      { regex: /[A-Z]/, message: "al menos una letra mayúscula" },
+      { regex: /\d/, message: "al menos un número" },
+      { regex: /[@$!%*?&]/, message: "al menos un carácter especial" },
+      { regex: /.{8,}/, message: "al menos 8 caracteres" },
+    ];
+
+    const messages = requirements
+      .filter((req) => !req.regex.test(password))
+      .map((req) => req.message);
+
+    return {
+      isValid: messages.length === 0,
+      messages,
+    };
   };
+
   useEffect(() => {
-    setIsChangeEnabled(validatePassword(newPassword));
+    const result = validatePassword(newPassword);
+    setIsChangeEnabled(result.isValid);
+    if (!result.isValid && newPassword) {
+      toast.current.show({
+        severity: "warn",
+        summary: "Contraseña no segura",
+        detail: `La contraseña debe contener: ${result.messages.join(", ")}`,
+        life: 3000,
+      });
+    }
   }, [newPassword]);
+
 
   useEffect(() => {
     const fetchData = async () => {
