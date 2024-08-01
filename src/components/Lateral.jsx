@@ -1,12 +1,14 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 import { jwtDecode } from "jwt-decode";
+import { Toast } from "primereact/toast";
 import axios from "axios";
 
 const Lateral = () => {
   const token = JSON.parse(localStorage.getItem("authToken"))[0];
   const decodedToken = token ? jwtDecode(token) : null;
   const isAdmin = decodedToken && decodedToken.role === "admin";
+  const toast = useRef(null);
   const [needChangePassword, setNeedChangePassword] = useState(false);
 
   const getInformationUser = async () => {
@@ -25,10 +27,19 @@ const Lateral = () => {
 
   useEffect(() => {
     getInformationUser();
+    if (needChangePassword) {
+      toast.current.show({
+        severity: "warn",
+        summary: "Advertencia",
+        detail:
+          "Cambia la contraseña para poder acceder a las demas funcionalidades",
+      });
+    }
   }, []);
 
   return (
     <nav className="navbar align-items-start sidebar sidebar-dark accordion bg-gradient-primary p-0 navbar-dark">
+      <Toast ref={toast}></Toast>
       <div className="container-fluid d-flex flex-column justify-content-start align-items-start p-0 ms-2 me-2">
         <button className="my-custom-button navbar-brand d-flex justify-content-center align-items-center sidebar-brand m-0">
           <div className="sidebar-brand-icon rotate-n-15">

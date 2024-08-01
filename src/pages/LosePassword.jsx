@@ -286,7 +286,7 @@ const LosePassword = () => {
                       <div className="card mb-3"></div>
                     </div>
                     <div className="user">
-                      {(isLoading && !recovered) && (
+                      {isLoading && !recovered && (
                         <div className="loading-overlay">
                           <ProgressSpinner />
                         </div>
@@ -330,6 +330,16 @@ const LosePassword = () => {
                           disabled={!capturedImage}
                         >
                           Enviar Correo
+                        </button>
+                      </div>
+                      <div className="text-center">
+                        <button
+                          onClick={() => {
+                            navigate("/");
+                          }}
+                          className="btn btn-link"
+                        >
+                          Volver
                         </button>
                       </div>
                     </div>
