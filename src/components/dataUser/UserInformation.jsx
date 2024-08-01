@@ -82,14 +82,11 @@ const UserInformation = () => {
       const decodedToken = token ? jwtDecode(token) : null;
 
       const response = await axios.patch(
-        `http://localhost:4000/login/changePassword`,
+        `${import.meta.env.VITE_API_URL}/login/changePassword`,
         {
           studentId: decodedToken.objectIduser,
-          currentPassword,
-          newPassword,
-        },
-        {
-          headers: { Authorization: `Bearer ${token}` },
+          currentPassword: currentPassword,
+          newPassword: newPassword,
         }
       );
       // console.log("respuesta",response.data)
@@ -138,20 +135,6 @@ const UserInformation = () => {
       messages,
     };
   };
-
-  useEffect(() => {
-    const result = validatePassword(newPassword);
-    setIsChangeEnabled(result.isValid);
-    if (!result.isValid && newPassword) {
-      toast.current.show({
-        severity: "warn",
-        summary: "Contraseña no segura",
-        detail: `La contraseña debe contener: ${result.messages.join(", ")}`,
-        life: 3000,
-      });
-    }
-  }, [newPassword]);
-
 
   useEffect(() => {
     const fetchData = async () => {
@@ -211,6 +194,19 @@ const UserInformation = () => {
     // Limpiar el event listener
     return () => window.removeEventListener("resize", handleResize);
   }, []);
+
+  const validateNewPassword = () => {
+    const result = validatePassword(newPassword);
+    setIsChangeEnabled(result.isValid);
+    if (!result.isValid && newPassword) {
+      toast.current.show({
+        severity: "warn",
+        summary: "Contraseña no segura",
+        detail: `La contraseña debe contener: ${result.messages.join(", ")}`,
+        life: 3000,
+      });
+    }
+  };
 
   return (
     <div className="card flex p-4 m-4">
@@ -322,6 +318,8 @@ const UserInformation = () => {
                     onChange={(e) => setNewPassword(e.target.value)}
                     toggleMask
                     className="p-inputtext-sm"
+                    onBlur={validateNewPassword}
+                    feedback={false}
                   />
                 </div>
               </div>

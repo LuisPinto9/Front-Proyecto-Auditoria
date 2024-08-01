@@ -1,13 +1,31 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { jwtDecode } from "jwt-decode";
+import axios from "axios";
 
 const Lateral = () => {
   const token = JSON.parse(localStorage.getItem("authToken"))[0];
   const decodedToken = token ? jwtDecode(token) : null;
-  const needChangePassword = decodedToken && decodedToken.needChangePassword;
   const isAdmin = decodedToken && decodedToken.role === "admin";
-  console.log(needChangePassword);
+  const [needChangePassword, setNeedChangePassword] = useState(false);
+
+  const getInformationUser = async () => {
+    try {
+      const response = await axios.get(
+        `${import.meta.env.VITE_API_URL}/users/findUsername/${
+          decodedToken.name
+        }`
+      );
+      setNeedChangePassword(response.data.data.needChangePassword);
+    } catch (error) {
+      console.error(error.message);
+      throw new Error("Network response was not ok");
+    }
+  };
+
+  useEffect(() => {
+    getInformationUser();
+  }, []);
 
   return (
     <nav className="navbar align-items-start sidebar sidebar-dark accordion bg-gradient-primary p-0 navbar-dark">
@@ -31,10 +49,9 @@ const Lateral = () => {
           <div>
             <div className="margin-right-38">
               <Link
-                to={needChangePassword ? "#" : "/userInformation"}
-                className={`btn btn-primary my-custom-button text-white ${
-                  needChangePassword ? "disabled-link" : ""
-                }`}
+                to={"/userInformation"}
+                className={`btn btn-primary my-custom-button text-white`}
+                style={{ textDecoration: "none" }}
               >
                 <i className="pi pi-user icon"></i>&nbsp;
                 <span className="text">Información</span>
@@ -43,8 +60,10 @@ const Lateral = () => {
 
             <div className="margin-right-38">
               <Link
-                to="/studentInscription"
-                className="btn btn-primary my-custom-button text-white"
+                to={needChangePassword ? "#" : "/studentInscription"}
+                className={`btn btn-primary my-custom-button text-white ${
+                  needChangePassword ? "disabled-link" : ""
+                }`}
                 style={{ textDecoration: "none" }}
               >
                 <i className="pi pi-search-plus icon"></i>&nbsp;
@@ -54,8 +73,10 @@ const Lateral = () => {
 
             <div className="margin-right-38">
               <Link
-                to="/TopicInscription"
-                className="btn btn-primary my-custom-button text-white"
+                to={needChangePassword ? "#" : "/topicInscription"}
+                className={`btn btn-primary my-custom-button text-white ${
+                  needChangePassword ? "disabled-link" : ""
+                }`}
                 style={{ textDecoration: "none" }}
               >
                 <i className="pi pi-book icon"></i>&nbsp;
@@ -69,8 +90,8 @@ const Lateral = () => {
           <div>
             <div className="margin-right-38">
               <Link
-                to="/userInformation"
-                className="btn btn-primary my-custom-button text-white"
+                to={"/userInformation"}
+                className={`btn btn-primary my-custom-button text-white `}
                 style={{ textDecoration: "none" }}
               >
                 <i className="pi pi-user icon"></i>&nbsp;
@@ -79,8 +100,10 @@ const Lateral = () => {
             </div>
             <div className="margin-right-38">
               <button
-                className="my-custom-button btn btn-primary"
-                data-bs-toggle="collapse"
+                className={`my-custom-button btn btn-primary ${
+                  needChangePassword ? "disabled-link" : ""
+                }`}
+                data-bs-toggle={needChangePassword ? "" : "collapse"}
                 href="#collapse-1"
               >
                 <i className="pi pi-users icon"></i>&nbsp;
@@ -116,8 +139,10 @@ const Lateral = () => {
             </div>
             <div className="margin-right-38">
               <button
-                className="my-custom-button btn btn-primary"
-                data-bs-toggle="collapse"
+                className={`my-custom-button btn btn-primary ${
+                  needChangePassword ? "disabled-link" : ""
+                }`}
+                data-bs-toggle={needChangePassword ? "" : "collapse"}
                 href="#collapse-2"
               >
                 <i className="far fa-file-alt icon"></i>&nbsp;
@@ -140,8 +165,10 @@ const Lateral = () => {
             </div>
             <div className="margin-right-38">
               <button
-                className="my-custom-button btn btn-primary"
-                data-bs-toggle="collapse"
+                className={`my-custom-button btn btn-primary ${
+                  needChangePassword ? "disabled-link" : ""
+                }`}
+                data-bs-toggle={needChangePassword ? "" : "collapse"}
                 href="#collapse-3"
               >
                 <i className="far fa-address-book icon"></i>&nbsp;
@@ -164,8 +191,10 @@ const Lateral = () => {
             </div>
             <div className="margin-right-38">
               <button
-                className="my-custom-button btn btn-primary"
-                data-bs-toggle="collapse"
+                className={`my-custom-button btn btn-primary ${
+                  needChangePassword ? "disabled-link" : ""
+                }`}
+                data-bs-toggle={needChangePassword ? "" : "collapse"}
                 href="#collapse-4"
               >
                 <i className="pi pi-warehouse icon"></i>&nbsp;

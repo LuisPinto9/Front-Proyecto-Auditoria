@@ -191,6 +191,6 @@ Estilos pagina no encontrada
 }
 
 .disabled-link {
-  cursor: not-allowed;
-  opacity: 0.6;
+  cursor: not-allowed !important;
+  opacity: 0.6 !important;
 }
