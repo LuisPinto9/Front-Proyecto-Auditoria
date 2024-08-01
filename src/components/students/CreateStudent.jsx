@@ -160,6 +160,7 @@ const CreateStudent = () => {
           detail: "Usuario Creado.",
         });
         cleanFields();
+        sendMail();
       })
       .catch((error) => {
         toast.current.show({
@@ -168,6 +169,27 @@ const CreateStudent = () => {
           detail: error.response.data.error,
         });
       });
+  };
+
+  const sendMail = async () => {
+    try {
+      await axios.post(`${import.meta.env.VITE_API_URL}/mail/sendmail`, {
+        email: email,
+        subject: "Recuperación de contraseña",
+        message: `
+          <p>Hola,</p>
+          <p>Tu contraseña es: <strong>${password}</strong></p>
+          <p>Por favor, inicia sesión en la aplicación y cambia tu contraseña.</p>
+        `,
+      });
+    } catch (error) {
+      console.error("Error al enviar el correo:", error);
+      toast.current.show({
+        severity: "warn",
+        summary: "Advertencia",
+        detail: "Error al enviar el correo",
+      });
+    }
   };
 
   const validateFields = () => {

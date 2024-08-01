@@ -98,6 +98,7 @@ const LosePassword = () => {
         `${import.meta.env.VITE_API_URL}/users/update/${userID}`,
         {
           password: newPassword,
+          needChangePassword: "true",
         }
       );
     } catch (error) {}

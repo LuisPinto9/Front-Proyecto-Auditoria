@@ -27,6 +27,7 @@ const Lateral = () => {
 
   useEffect(() => {
     getInformationUser();
+    console.log(needChangePassword);
     if (needChangePassword) {
       toast.current.show({
         severity: "warn",
